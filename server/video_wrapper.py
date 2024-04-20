@@ -2,18 +2,7 @@ import cv2
 import os
 import shutil
 from pytube import YouTube
-
-# YouTube video URL
-VIDEO_URL = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-
-# Directory to save the downloaded video
-DOWNLOAD_DIRECTORY = "experiments/content/videos"
-VIDEO_FILENAME = "downloaded_video.mp4"
-AUDIO_FILENAME = "downloaded_audio.mp3"
-
-# Directory for extracted frames
-FRAME_EXTRACTION_DIRECTORY = "experiments/content/frames"
-FRAME_PREFIX = "_frame"
+from constants import *
 
 def download_youtube_video(url, path):
     print(f"Downloading content from {url}...")
@@ -52,8 +41,6 @@ def extract_frame_from_video(video_file_path):
         success, frame = vidcap.read()
         if not success:  # End of video
             break
-        if frame_count > 200:
-            print(frame)
         if int(count / fps) == frame_count:  # Extract a frame every second
             min = frame_count // 60
             sec = frame_count % 60
@@ -68,11 +55,12 @@ def extract_frame_from_video(video_file_path):
     vidcap.release()
     print(f"Completed video frame extraction!\n\nExtracted: {frame_count} frames")
 
-def main():
+def get_video(url: str, extract: bool = True):
     # Download video
-    video_file_path, audio_file_path = download_youtube_video(VIDEO_URL, DOWNLOAD_DIRECTORY)
+    video_file_path, audio_file_path = download_youtube_video(url, DOWNLOAD_DIRECTORY)
     # Extract frames
     extract_frame_from_video(video_file_path)
+    return video_file_path, audio_file_path
 
 if __name__ == "__main__":
-    main()
+    get_video(VIDEO_URL)
