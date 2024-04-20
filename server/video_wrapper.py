@@ -9,20 +9,29 @@ VIDEO_URL = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 # Directory to save the downloaded video
 DOWNLOAD_DIRECTORY = "experiments/content/videos"
 VIDEO_FILENAME = "downloaded_video.mp4"
+AUDIO_FILENAME = "downloaded_audio.mp3"
 
 # Directory for extracted frames
 FRAME_EXTRACTION_DIRECTORY = "experiments/content/frames"
 FRAME_PREFIX = "_frame"
 
 def download_youtube_video(url, path):
-    print(f"Downloading video from {url}...")
+    print(f"Downloading content from {url}...")
     yt = YouTube(url)
-    stream = yt.streams.filter(file_extension='mp4').get_highest_resolution()
+
+    # Download the highest resolution video
+    video_stream = yt.streams.filter(file_extension='mp4').get_highest_resolution()
     if not os.path.exists(path):
         os.makedirs(path)
-    video_path = stream.download(output_path=path, filename=VIDEO_FILENAME)
+    video_path = video_stream.download(output_path=path, filename=VIDEO_FILENAME)
     print(f"Video downloaded to {video_path}")
-    return video_path
+
+    # Download the best audio stream and save it as an MP4 (which is what pytube does natively)
+    audio_stream = yt.streams.filter(only_audio=True).first()
+    audio_path = audio_stream.download(output_path=path, filename=AUDIO_FILENAME)
+    print(f"Audio downloaded to {audio_path}")
+    
+    return video_path, audio_path
 
 def create_frame_output_dir(output_dir):
     if not os.path.exists(output_dir):
@@ -61,7 +70,7 @@ def extract_frame_from_video(video_file_path):
 
 def main():
     # Download video
-    video_file_path = download_youtube_video(VIDEO_URL, DOWNLOAD_DIRECTORY)
+    video_file_path, audio_file_path = download_youtube_video(VIDEO_URL, DOWNLOAD_DIRECTORY)
     # Extract frames
     extract_frame_from_video(video_file_path)
 
