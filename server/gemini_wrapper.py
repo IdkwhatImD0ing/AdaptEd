@@ -126,12 +126,13 @@ def generate_content_video(prompt: str, frame_directory: str):
 if __name__ == '__main__':
     # Upload a file to the GEMINI API    
     
+    video_frame_directory = 'experiments/content/frames/Never-Gonna-Give-You-Up'
     video_prompt = "Describe this video."
-    response_to_video = generate_content_video(video_prompt, FRAME_EXTRACTION_DIRECTORY)
+    response_to_video = generate_content_video(video_prompt, video_frame_directory)
     print("\n~Video Frame Analysis~\n")
-    print(response_to_video)
+    print(response_to_video)    
     
-    audio_path = "./experiments/content/videos/downloaded_audio.mp3"
+    audio_path = "experiments/content/videos/Never-Gonna-Give-You-Up.mp3"
     audio_prompt = "Listen carefully to the following audio file. Provide a brief summary."
     response_to_audio = generate_content_audio(audio_prompt, audio_path)
     print("\~Audio Analysis~\n")
