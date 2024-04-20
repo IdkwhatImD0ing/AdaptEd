@@ -1,10 +1,16 @@
-from pymongo import MongoClient
+from pymongo.mongo_client import MongoClient
 
 class MongoDBManager:
     def __init__(self, uri, db_name):
         self.client = MongoClient(uri)
         self.db = self.client[db_name]
-
+        # Send a ping to confirm a successful connection
+        try:
+            self.client.admin.command("ping")
+            print("Pinged your deployment. You successfully connected to MongoDB!")
+        except Exception as e:
+            print(e)
+            
     def get_lecture(self, user_email, lecture_title):
         """
         Retrieve data for a specific user and lecture title.
@@ -12,14 +18,14 @@ class MongoDBManager:
         :param lecture_title: Title of the lecture.
         :return: Data as a dictionary or None if not found.
         """
+
         collection = self.db.lectures
-        
         data = collection.find_one(
             {"email": user_email, "lectures.title": lecture_title},
             {"lectures.$": 1, "_id": 0}
         )
         if data and "lectures" in data:
-            return data["lectures"][0] 
+            return data["lectures"][0]
         else:
             return None
 
@@ -29,7 +35,7 @@ class MongoDBManager:
         :param template_id: The ID of the template to use.
         :return: A dictionary representing the slide layout or None if template not found.
         """
-        collection = self.db.templates  
+        collection = self.db.templates
         template = collection.find_one({"template_id": template_id})
 
         if not template:

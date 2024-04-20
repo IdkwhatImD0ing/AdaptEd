@@ -1,17 +1,16 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from mongo_manager import MongoDBManager
+from mongodb_manager import MongoDBManager
 import logging
 import os
-import voice
+# import voice
 from dotenv import load_dotenv
-
 load_dotenv()
 
 
 app = FastAPI()
 
-app.include_router(voice.router)
+# app.include_router(voice.router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -34,14 +33,15 @@ async def log_request(request: Request, call_next):
     return response
 
 
-@app.get("/lectures")
-async def get_lecture(user_email: str, lecture_title: str):
+@app.get("/lectures/")
+async def get_lecture(email: str, title: str):
     """
     Endpoint to retrieve a specific lecture based on user email and lecture title.
     """
-    lecture = mongo_client.get_lecture(user_email, lecture_title)
+    lecture = mongo_client.get_lecture(email, title)
     if not lecture:
         raise HTTPException(status_code=404, detail="Lecture not found")
+    print(lecture)
     return lecture
 
 
