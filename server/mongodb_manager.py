@@ -1,5 +1,6 @@
 from pymongo.mongo_client import MongoClient
 
+
 class MongoDBManager:
     def __init__(self, uri, db_name):
         self.client = MongoClient(uri)
@@ -10,7 +11,7 @@ class MongoDBManager:
             print("Pinged your deployment. You successfully connected to MongoDB!")
         except Exception as e:
             print(e)
-            
+
     def get_lecture(self, user_email, lecture_title):
         """
         Retrieve data for a specific user and lecture title.
@@ -44,8 +45,8 @@ class MongoDBManager:
         # Construct the slide based on the template
         slide = {
             "description": template["description"],
-            "num_images" : template["num_images"],
-            "num_texts" : template["num_texts"],
+            "num_images": template["num_images"],
+            "num_texts": template["num_texts"],
         }
         return slide
 

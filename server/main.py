@@ -24,6 +24,7 @@ app.add_middleware(
 
 mongo_client = MongoDBManager(os.getenv("MONGO_URI"), os.getenv("DB_NAME"))
 
+
 @app.middleware("http")
 async def log_request(request: Request, call_next):
     logging.info(f"Incoming request: {request.method} {request.url}")
