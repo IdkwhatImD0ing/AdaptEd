@@ -2,9 +2,7 @@ import logging
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
-from fastapi import HTTPException
-from fastapi import Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from mongodb_manager import MongoDBManager
 
