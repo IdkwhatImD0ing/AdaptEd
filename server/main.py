@@ -1,11 +1,11 @@
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from mongodb_manager import MongoDBManager
 import logging
 import os
 
 # import voice
 from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from mongodb_manager import MongoDBManager
 
 load_dotenv()
 
