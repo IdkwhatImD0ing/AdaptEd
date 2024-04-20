@@ -3,19 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { RetellWebClient } from "retell-client-js-sdk";
 
-const isDev = process.env.NODE_ENV == "development";
+const AGENT_ID = "975ff855c8eaf42285e7c1e1a115c396";
 
-const AGENT_ID = isDev
-  ? "bd5a5ec2b96d50d774bb5d71a697bb15"
-  : "e1352846fcdffd559626cc5647b19a36";
+const SERVER_ENDPOINT =
+  "http://localhost:8000/voice/register-call-on-your-server";
 
-const SERVER_ENDPOINT = isDev
-  ? "http://localhost:8000/voice/register-call-on-your-server"
-  : "https://portal.bot/voice/register-call-on-your-server";
-
-const FUNC_CALL_ENDPOINT = isDev
-  ? "ws://localhost:8000/voice/data-websocket"
-  : "wss://portal.bot/voice/data-websocket";
+const FUNC_CALL_ENDPOINT = "ws://localhost:8000/voice/data-websocket";
 
 interface RegisterCallResponse {
   callId?: string;
@@ -71,6 +64,9 @@ const App = () => {
         console.log("update", update);
       }
     );
+
+    // Start conversation on mount
+    toggleConversation();
 
     return () => {
       // Cleanup event listeners when the component is unmounted
