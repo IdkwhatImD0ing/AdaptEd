@@ -1,18 +1,23 @@
+import asyncio
 import json
 import os
-from dotenv import load_dotenv
-from fastapi import Request, WebSocket, WebSocketDisconnect, APIRouter
-from fastapi.responses import JSONResponse
 
+from dotenv import load_dotenv
+from fastapi import APIRouter
+from fastapi import Request
+from fastapi import WebSocket
+from fastapi import WebSocketDisconnect
+from fastapi.responses import JSONResponse
 from llm import LlmClient
-import asyncio
 from retell import Retell
 
 load_dotenv()
 
 router = APIRouter(
     prefix="/voice",
-    responses={404: {"description": "Not found"}},
+    responses={404: {
+        "description": "Not found"
+    }},
 )
 
 client = Retell(api_key=os.environ["RETELL_API_KEY"])
@@ -34,16 +39,15 @@ async def handle_register_call_api(request: Request):
             audio_websocket_protocol="web",
             sample_rate=24000,
         )
-        return JSONResponse(
-            {
-                "callId": call.call_id,
-                "sampleRate": call.sample_rate,
-            }
-        )
+        return JSONResponse({
+            "callId": call.call_id,
+            "sampleRate": call.sample_rate,
+        })
     except Exception as error:
         print(f"Error registering call: {error}")
         # Send an error response back to the client
-        return JSONResponse({"error": "Failed to register call"}, status_code=500)
+        return JSONResponse({"error": "Failed to register call"},
+                            status_code=500)
 
 
 @router.websocket("/llm-websocket/{call_id}")
@@ -72,9 +76,7 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
                 else:
                     print(
                         "\033[91mError: Function call occurred but no data_websocket connected to send it for call ID: "
-                        + call_id
-                        + "\033[0m"
-                    )
+                        + call_id + "\033[0m")
             else:
                 await websocket.send_text(json.dumps(event))
                 if request["response_id"] < response_id:
