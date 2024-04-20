@@ -3,7 +3,7 @@ from pymongo import MongoClient
 class MongoDBManager:
     def __init__(self, uri, db_name):
         self.client = MongoClient(uri)
-        self.db = self.client[db_name] #teachme
+        self.db = self.client[db_name]
 
     def get_lecture(self, user_email, lecture_title):
         """

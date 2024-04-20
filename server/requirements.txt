@@ -1,4 +1,7 @@
+dnspython==1.16.0
 fastapi==0.110.2
 openai==1.23.2
+pip-chill==1.0.3
+pymongo==3.6.0
 python-dotenv==1.0.1
 retell==0.5.1
