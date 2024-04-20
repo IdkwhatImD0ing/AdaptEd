@@ -9,9 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^3.5.0",
+    "next": "14.2.2",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.2"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "typescript": "^5",
