@@ -10,7 +10,9 @@ class MongoDBManager:
         # Send a ping to confirm a successful connection
         try:
             self.client.admin.command("ping")
-            print("Pinged your deployment. You successfully connected to MongoDB!")
+            print(
+                "Pinged your deployment. You successfully connected to MongoDB!"
+            )
         except Exception as e:
             print(e)
 
@@ -25,8 +27,14 @@ class MongoDBManager:
 
         collection = self.db.lectures
         data = collection.find_one(
-            {"email": user_email, "lectures.title": lecture_title},
-            {"lectures.$": 1, "_id": 0},
+            {
+                "email": user_email,
+                "lectures.title": lecture_title
+            },
+            {
+                "lectures.$": 1,
+                "_id": 0
+            },
         )
         if data and "lectures" in data:
             return data["lectures"][0]
