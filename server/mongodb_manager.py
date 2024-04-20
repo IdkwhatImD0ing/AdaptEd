@@ -2,6 +2,7 @@ from pymongo.mongo_client import MongoClient
 
 
 class MongoDBManager:
+    """ """
     def __init__(self, uri, db_name):
         self.client = MongoClient(uri)
         self.db = self.client[db_name]
@@ -13,11 +14,12 @@ class MongoDBManager:
             print(e)
 
     def get_lecture(self, user_email, lecture_title):
-        """
-        Retrieve data for a specific user and lecture title.
+        """Retrieve data for a specific user and lecture title.
+
         :param user_email: Email of the user.
         :param lecture_title: Title of the lecture.
-        :return: Data as a dictionary or None if not found.
+        :returns: Data as a dictionary or None if not found.
+
         """
 
         collection = self.db.lectures
@@ -31,10 +33,11 @@ class MongoDBManager:
             return None
 
     def get_template(self, template_id):
-        """
-        Retrieves tremplate slide data based on a template ID.
+        """Retrieves tremplate slide data based on a template ID.
+
         :param template_id: The ID of the template to use.
-        :return: A dictionary representing the slide layout or None if template not found.
+        :returns: A dictionary representing the slide layout or None if template not found.
+
         """
         collection = self.db.templates
         template = collection.find_one({"template_id": template_id})
@@ -51,7 +54,5 @@ class MongoDBManager:
         return slide
 
     def close(self):
-        """
-        Close the MongoDB connection.
-        """
+        """Close the MongoDB connection."""
         self.client.close()
