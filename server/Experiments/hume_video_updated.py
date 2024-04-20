@@ -12,56 +12,57 @@ import base64
 load_dotenv()
 
 
-async def continuous_frame_processing(
-    frame_queue, lock, last_bbox, last_prob, last_emotions
-):
+async def process_frame(frame):
     client = HumeStreamClient(os.getenv("HUME_API_KEY"))
     config = FaceConfig()
     async with client.connect([config]) as socket:
-        while True:
-            frame = await frame_queue.get()
-            # print queue length
-            if frame is None:
-                break
-            frame_base64 = base64.b64encode(cv2.imencode(".jpg", frame)[1]).decode()
-            result = await socket.send_bytes(frame_base64.encode())
-            predictions = result.get("face", {}).get("predictions", [])
-            if predictions:
-                prediction = predictions[0]
-                bbox, prob, emotions = (
-                    prediction["bbox"],
-                    prediction["prob"],
-                    sorted(
-                        prediction["emotions"], key=lambda e: e["score"], reverse=True
-                    )[:3],
-                )
-                with lock:
-                    if bbox:
-                        last_bbox["x"] = bbox["x"]
-                        last_bbox["y"] = bbox["y"]
-                        last_bbox["w"] = bbox["w"]
-                        last_bbox["h"] = bbox["h"]
-                    last_prob.value = prob
-                    last_emotions[:] = emotions
-                print(
-                    f"Updated bbox: {last_bbox}, prob: {last_prob.value}, emotions: {last_emotions}"
-                )
+        frame_base64 = base64.b64encode(cv2.imencode(".jpg", frame)[1]).decode()
+
+        result = await socket.send_bytes(frame_base64.encode())
+        predictions = result.get("face", {}).get("predictions", [])
+
+        if predictions:
+            prediction = predictions[0]
+            last_bbox = prediction["bbox"]
+            last_prob = prediction["prob"]
+            last_emotions = sorted(
+                prediction["emotions"],
+                key=lambda e: e["score"],
+                reverse=True,
+            )[:3]
+
+            return last_bbox, last_prob, last_emotions
+        return {"x": 0, "y": 0, "w": 0, "h": 0}, 0.0, []
 
 
-def start_async_loop(frame_queue, lock, last_bbox, last_prob, last_emotions):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(
-        continuous_frame_processing(
-            frame_queue, lock, last_bbox, last_prob, last_emotions
+def update_data(frame_queue, lock, last_bbox, last_prob, last_emotions):
+    while True:
+        frame = frame_queue.get()  # Receive frame from the queue
+        if frame is None:  # We can use None as a signal to stop the process
+            break
+
+        # Run the asynchronous frame processing function
+        bbox, prob, emotions = asyncio.run(process_frame(frame))
+
+        # Update shared variables with the results
+        with lock:
+            if bbox:
+                last_bbox["x"] = bbox["x"]
+                last_bbox["y"] = bbox["y"]
+                last_bbox["w"] = bbox["w"]
+                last_bbox["h"] = bbox["h"]
+            last_prob.value = prob
+            last_emotions[:] = emotions
+
+        print(
+            f"Updated bbox: {last_bbox}, prob: {last_prob.value}, emotions: {last_emotions}"
         )
-    )
 
 
 def capture_and_display(frame_queue, lock, last_bbox, last_prob, last_emotions):
     cap = cv2.VideoCapture(0)
     prev_time = 0
-    interval = 1
+    interval = 2
     if not cap.isOpened():
         print("Cannot open camera")
         return
@@ -130,7 +131,7 @@ if __name__ == "__main__":
 
     # Creating processes
     update_process = multiprocessing.Process(
-        target=start_async_loop,
+        target=update_data,
         args=(frame_queue, lock, last_bbox, last_prob, last_emotions),
     )
     capture_process = multiprocessing.Process(
