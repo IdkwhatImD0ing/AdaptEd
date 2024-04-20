@@ -1,12 +1,15 @@
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from mongodb_manager import MongoDBManager
 import logging
 import os
-# import voice
-from dotenv import load_dotenv
-load_dotenv()
 
+from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi import HTTPException
+from fastapi import Request
+from fastapi.middleware.cors import CORSMiddleware
+from mongodb_manager import MongoDBManager
+# import voice
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -23,6 +26,7 @@ app.add_middleware(
 # Configuration for your MongoDB instance
 
 mongo_client = MongoDBManager(os.getenv("MONGO_URI"), os.getenv("DB_NAME"))
+
 
 @app.middleware("http")
 async def log_request(request: Request, call_next):
