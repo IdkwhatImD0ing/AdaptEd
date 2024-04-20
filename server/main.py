@@ -3,8 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from mongodb_manager import MongoDBManager
 import logging
 import os
+
 # import voice
 from dotenv import load_dotenv
+
 load_dotenv()
 
 

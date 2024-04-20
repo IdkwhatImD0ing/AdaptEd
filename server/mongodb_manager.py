@@ -23,7 +23,7 @@ class MongoDBManager:
         collection = self.db.lectures
         data = collection.find_one(
             {"email": user_email, "lectures.title": lecture_title},
-            {"lectures.$": 1, "_id": 0}
+            {"lectures.$": 1, "_id": 0},
         )
         if data and "lectures" in data:
             return data["lectures"][0]
