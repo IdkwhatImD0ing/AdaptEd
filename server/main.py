@@ -11,7 +11,6 @@ from mongodb_manager import MongoDBManager
 
 load_dotenv()
 
-
 app = FastAPI()
 
 # app.include_router(voice.router)
