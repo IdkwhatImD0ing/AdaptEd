@@ -71,7 +71,9 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
                     await func_socket.send_text(json.dumps(event))
                 else:
                     print(
-                        f"\033[91mError: Function call occurred but no data_websocket connected to send it for call ID: {call_id}\033[0m"
+                        "\033[91mError: Function call occurred but no data_websocket connected to send it for call ID: "
+                        + call_id
+                        + "\033[0m"
                     )
             else:
                 await websocket.send_text(json.dumps(event))
