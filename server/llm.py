@@ -10,6 +10,7 @@ agentPrompt = "You are a helpful teaching assistant."
 
 
 class LlmClient:
+    """ """
     def __init__(self):
         pass
         self.client = OpenAI(
@@ -18,6 +19,7 @@ class LlmClient:
         )
 
     def draft_begin_messsage(self):
+        """ """
         return {
             "response_id": 0,
             "content": beginSentence,
@@ -26,6 +28,11 @@ class LlmClient:
         }
 
     def convert_transcript_to_openai_messages(self, transcript):
+        """
+
+        :param transcript: 
+
+        """
         messages = []
         for utterance in transcript:
             if utterance["role"] == "agent":
@@ -35,6 +42,11 @@ class LlmClient:
         return messages
 
     def prepare_prompt(self, request: Request) -> list[ChatCompletionMessageParam]:
+        """
+
+        :param request: Request: 
+
+        """
         prompt = [
             {
                 "role": "system",
@@ -59,6 +71,7 @@ class LlmClient:
 
     # Step 1: Prepare the function calling definition to the prompt
     def prepare_functions(self):
+        """ """
         functions = [
             {
                 "type": "function",
@@ -101,6 +114,11 @@ class LlmClient:
         return functions, client_side_funcs, server_side_funcs
 
     def draft_response(self, request: Request):
+        """
+
+        :param request: Request: 
+
+        """
         print(request)
 
         prompt = self.prepare_prompt(request)
