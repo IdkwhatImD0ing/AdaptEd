@@ -227,6 +227,7 @@ nav
     justify-items: center
 
     background-image: url('../public/background_adapted.svg')
+    
 .title
     background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(153, 153, 153, 1) 100%)
     background-clip: text
@@ -284,7 +285,7 @@ nav
     background-color: $input-color
     padding: 20px
     border-radius: 12px
-    font-size: 28px
+    font-size: 32px
     border: $border
     margin: 20px
     &::placeholder
@@ -292,7 +293,7 @@ nav
 
 
 .main-page
-    width: 76vw
+    width: 90vw
     height: 94vh
     border-radius: 18px
     justify-items: center
@@ -300,6 +301,10 @@ nav
 
     @include grid
     right: 0
+    background-size: cover
+    background-position: center
+    background-image: url('../public/inputBackground_adapted.svg')
+
 .main-text
     @include flex-row
 .main
@@ -309,6 +314,8 @@ nav
 .font-bold
     font-weight: 800
     letter-spacing: 2px
+    font-size: 76px
+    padding-bottom: 1vh
 
 .navBarElement
     padding: 12px
@@ -319,7 +326,7 @@ nav
     @include flex
     justify-content: flex-start
     @include flex-column
-    width: 20vw
+    width: 10vw
     align-items: flex-start
     &.active
         border: 2px solid $gradient
