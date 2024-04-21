@@ -17,10 +17,11 @@ export default function DeckControls(props: {
 
   return (
     <DefaultTemplate
-    // Add any custom props or styles here
-    // For example:
-    // backgroundColor="blue"
-    // fontFamily="Arial"
+      color="purple"
+      // Add any custom props or styles here
+      // For example:
+      // backgroundColor="blue"
+      // fontFamily="Arial"
     />
   );
 }

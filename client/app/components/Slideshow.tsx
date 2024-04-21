@@ -41,7 +41,7 @@ const theme = {
     tertiary: "white",
   },
   backdropStyle: {
-    backgroundColor: "white",
+    // backgroundColor: "white",
   },
 };
 
@@ -114,7 +114,7 @@ export default function Slideshow(props: {
               ))}
               {slide.images.length > 0 &&
                 slide.images
-                  .slice(0, 3)
+                  .slice(0, 1)
                   .map((image, index) => (
                     <Image
                       key={index}

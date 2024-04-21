@@ -1,23 +1,22 @@
-import google.generativeai as genai
-import google.generativeai as genai
 import ast
+import asyncio
+import json
 import os
 import random
+
+import google.generativeai as genai
+from dotenv import load_dotenv
+from image_agent import get_images
 from nest_asyncio import apply
 from templates import templates
-import json
-from image_agent import get_images
+from wikipedia_tool import wikipedia_tool
 from youtube import get_data
-import asyncio
 
 apply()
 
 # Load environment variables from a .env file
-from dotenv import load_dotenv
 
 load_dotenv()
-
-from wikipedia_tool import wikipedia_tool
 
 # Parse API keys stored in an environment variable and convert them into a Python list
 GEMINI_API_KEYS = os.environ.get("GEMINI_API_KEYS")
@@ -30,7 +29,6 @@ random.shuffle(KEY_LIST)
 current_api_key_index = 0
 
 genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
-
 
 # List to store historical messages for reference or logging
 messages = []
@@ -69,23 +67,21 @@ def generate_new_model():
 def sources_to_lecture(model, original_prompt, sources, audio, video):
     """Converts a list of sources into a single lecture template.
 
-    Args:
-        sources (list): A list of sources, each containing a 'content' key with the source content.
+    :param sources: A list of sources, each containing a 'content' key with the source content.
+    :type sources: list
+    :param model: param original_prompt:
+    :param audio: param video:
+    :param original_prompt: param video:
+    :param video:
+    :returns: A single lecture template combining all the source content.
+    :rtype: str
 
-    Returns:
-        str: A single lecture template combining all the source content.
     """
-    prompt = (
-        "Available templates: \n\n"
-        + str(templates)
-        + "\n\n"
-        + "Original Topic: "
-        + original_prompt
-        + "\n\n"
-        + """
+    prompt = ("Available templates: \n\n" + str(templates) + "\n\n" +
+              "Original Topic: " + original_prompt + "\n\n" + """
 You are an advanced assistant that is in charge of aggregating multiple sources of information into a lecture based on a specific prompt.
 Output 8 different slides on the topic given above using the sources provided as well as the given templates.
-Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting. 
+Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting.
 Keep text content short and concise, at most 8 words per text.
 Make sure you always start off with a title slide.
 
@@ -105,14 +101,12 @@ Make sure the response is in the following format, only output the keys and valu
               "stacks are used in DFS"
           ],
           "speaker_notes" : A script for the speaker to read
-        }   
+        }
     ]
 }
-"""
-    )
+""")
     lecture = model.generate_content(
-        video
-        + [
+        video + [
             audio,
             sources + prompt,
         ],
@@ -124,23 +118,19 @@ Make sure the response is in the following format, only output the keys and valu
 def sources_to_lecture_simple(model, original_prompt, sources):
     """Converts a list of sources into a single lecture template.
 
-    Args:
-        sources (list): A list of sources, each containing a 'content' key with the source content.
+    :param sources: A list of sources, each containing a 'content' key with the source content.
+    :type sources: list
+    :param model: param original_prompt:
+    :param original_prompt: returns: A single lecture template combining all the source content.
+    :returns: A single lecture template combining all the source content.
+    :rtype: str
 
-    Returns:
-        str: A single lecture template combining all the source content.
     """
-    prompt = (
-        "Available templates: \n\n"
-        + str(templates)
-        + "\n\n"
-        + "Original Topic: "
-        + original_prompt
-        + "\n\n"
-        + """
+    prompt = ("Available templates: \n\n" + str(templates) + "\n\n" +
+              "Original Topic: " + original_prompt + "\n\n" + """
 You are an advanced assistant that is in charge of aggregating multiple sources of information into a lecture based on a specific prompt.
 Output 8 different slides on the topic given above using the sources provided as well as the given templates.
-Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting. 
+Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting.
 Keep text content short and concise, at most 8 words per text.
 Make sure you always start off with a title slide.
 
@@ -160,11 +150,10 @@ Make sure the response is in the following format, only output the keys and valu
               "stacks are used in DFS"
           ],
           "speaker_notes" : A script for the speaker to read
-        }   
+        }
     ]
 }
-"""
-    )
+""")
     lecture = model.generate_content(
         sources + prompt,
         request_options={"timeout": 1000},
@@ -177,7 +166,9 @@ async def get_lecture(result):
     new_slides = []
 
     for slide in result["slides"]:
-        template = [t for t in templates if t["template_id"] == slide["template_id"]][0]
+        template = [
+            t for t in templates if t["template_id"] == slide["template_id"]
+        ][0]
         num_images = template["num_images"]
 
         if num_images == 0:
@@ -197,7 +188,9 @@ async def get_lecture(result):
     # Iterate over the slides that require images
     image_index = 0
     for slide in result["slides"]:
-        template = [t for t in templates if t["template_id"] == slide["template_id"]][0]
+        template = [
+            t for t in templates if t["template_id"] == slide["template_id"]
+        ][0]
         num_images = template["num_images"]
         if num_images != 0:
             new_slides.append({**slide, "images": images_results[image_index]})
@@ -208,6 +201,11 @@ async def get_lecture(result):
 
 
 def generate(topic):
+    """
+
+    :param topic:
+
+    """
     sources = wikipedia_tool.run(topic)
     model = generate_new_model()
     audio, video = get_data(topic)
@@ -224,9 +222,14 @@ def generate(topic):
 
 
 def generate_simple(topic):
+    """
+
+    :param topic:
+
+    """
     sources = wikipedia_tool.run(topic)
     model = generate_new_model()
-    sources_to_lecture_simple(model, topic, sources)
+    result = sources_to_lecture_simple(model, topic, sources)
     if "```json" in result:
         # Get the JSON content from the result
         result = result.split("```json")[1]

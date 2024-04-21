@@ -1,0 +1,334 @@
+//* root element styling
+//! personalize
+$bg: #0E0E0F
+$main: #1B1B1E
+$text-color: #FFF
+$sec-text-color: #1B1B1E
+$prim: #9F03FE
+$hover-prim: #8200D1
+$hover-sec: darkgrey
+$sec: #F5F4F7
+$hover-sec: #EDEDED
+$border: 3px solid #DEDEDE
+$card: #DEDEDE
+$input-color: #262628
+$border: 2px solid #3B3D41
+$gradient: linear-gradient(to right, rgba(117, 247, 255, 1), rgba(135, 106, 250, 1), rgba(209, 62, 233, 1), rgba(32, 138, 255, 1))
+$p-color: #646464
+
+// layout
+$small-border: 12px
+$h1_header: 72px
+$h2: 18px
+
+html,
+body
+  margin: 0
+  background-color: $bg
+  overflow-x: hidden
+  font-family: 'Inter', sans-serif
+
+h1
+    font-size: $h1_header
+    font-weight: 600
+    color: $text-color
+    margin: 0
+    padding: 0
+    line-height: 1.2em
+h2
+    font-size: 68px
+    font-weight: 600
+    color: $p-color
+    margin: 0
+    padding: 0
+    line-height: 1.2em
+    span
+        color: $text-color
+        style: italic
+
+//* buttons
+button
+  border: 0
+  outline: 0
+  cursor: pointer
+
+
+
+//* reuseable props
+@mixin grid
+  display: grid
+  place-content: center
+
+@mixin grid-row
+  @include grid
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  align-items: center
+  justify-content: center
+  justify-items: center
+
+
+
+@mixin grid-column
+  @include grid
+  display: grid
+  grid-template-columns: auto
+  align-items: center
+  justify-content: center
+
+
+@mixin flex
+  display: flex
+  justify-content: center
+  align-items: center
+
+@mixin flex-row
+  @include flex
+  flex-direction: row
+  justify-content: space-between
+
+@mixin flex-column
+  @include flex
+  flex-direction: column
+
+
+//* general formatting
+
+section,
+.container
+  @include grid
+  height: 100vh
+  & img
+    width: 80vw
+
+.flex-row
+  @include flex
+  @include flex-row
+
+.flex-column
+  @include flex
+  @include flex-column
+
+.grid-row
+  @include grid
+  @include grid-row
+
+.grid-column
+  @include grid
+  @include grid-column
+
+
+
+
+//* reusable components
+//* regular button
+button
+  width: fit-content
+  gap: 4px
+  @include flex-row
+  cursor: pointer
+  padding: 12px 18px
+  white-space: nowrap
+  outline: none
+  border: none
+  font-size: $h2
+  font-weight: 600
+  font-size: 26px
+  border-radius: $small-border
+  &.primary
+    background: linear-gradient(180deg, rgba(246, 248, 255, 1) 0%, rgba(189, 200, 227, 1) 100%)
+    color: $sec-text-color
+    gap: 8px
+    transition: transform 500ms ease-in-out, border-image 500ms ease-in-out
+    border-radius: 12px
+    border: 4px solid transparent
+
+    &:hover
+      transform: scale(1.05)
+
+
+    //   display: inline-flex
+    //   border: .01px transparent
+    //   border-radius: 12px
+    //   background-image: linear-gradient(white, white), radial-gradient(circle at top left, #7BCDFE, rgba(135, 106, 250, 1))
+    //   background-origin: border-box
+    //   background-clip: content-box, border-box
+  &.secondary
+    background-color: $sec
+    color: $text-color
+    border: $border
+    &:hover
+      background-color: $hover-sec
+  &.hero
+    background: linear-gradient(93deg, #C700E7 0.74%, #6303FF 99.48%)
+    color: #fff
+    height: fit-content
+    width: fit-content
+    font-size: 32px
+    transition: transform 500ms ease
+    &:hover
+        background-image: linear-gradient(120deg, lighten(#C700E7, 10%) 0%, lighten(#6303FF, 10%) 100%)
+        transform: scale(1.05)
+
+
+
+
+
+//* button with outline
+
+
+//* nav
+.nav-landing-contain
+    padding: 22px
+    width: 100vw
+    position: fixed
+    z-index: 10000
+
+nav
+  width: fit-content
+  height: fit-content
+  font-size: $h2
+  font-weight: 400
+  color: $text-color
+  background-color: #242425
+  padding: 18px 22px
+  border-radius: 100px
+  border: $border
+  backdrop-filter: blur(10px)
+
+  ul
+    margin: 0
+    padding: 0
+    list-style: none
+  li
+
+
+  a
+    display: block
+    padding: 6px 12px
+    border-radius: 100px
+    text-decoration: none
+    transition: background-color 200ms ease
+    width: fit-content
+    white-space: nowrap
+    &:hover
+      background-color: $prim
+      color: white
+      cursor: pointer
+
+//* hero
+.hero
+    @include grid
+    width: 100vw
+    height: 120vh
+    gap: 22px
+    background-size: cover
+    background-position: center
+    justify-items: center
+
+    background-image: url('../public/background_adapted.svg')
+.title
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(153, 153, 153, 1) 100%)
+    background-clip: text
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+    text-align: center
+
+.parallax
+    @include grid
+    width: 100vw
+    height: 100vh
+    height: fit-content
+    // background-image: url('../../public/gemui_page_logo.svg')
+    // background-position: center
+    // justify-items: center
+    // background-repeat: no-repeat
+.input-contain
+    @include flex-row
+    align-content: left
+    align-items: left
+    justify-content: flex-start
+    background-color: #fff
+    padding: 12px
+    border-radius: 16px
+    margin: 0 10vw
+    gap: 12px
+    width: 50vw
+    border: $border
+    transition: border 500ms ease
+    margin-bottom: 42px
+    &:hover
+        border: 3px solid $prim
+        cursor: pointer
+        .spark-contain
+            background: linear-gradient(93deg, #C700E7 0.74%, #6303FF 99.48%)
+            -webkit-background-clip: text
+            background-clip: text
+            color: transparent // Makes the text color transparent to show the background
+            -webkit-text-fill-color: transparent
+.spark-contain
+    font-size: 22px
+    color: $text-color
+.text-contain
+    @include flex-column
+    margin-bottom: 42px
+    z-index: 900909009
+.hero-text
+    font-size: 28px
+    font-weight: 400
+    color: $p-color
+
+.large-input
+    width: 20vw
+    height: 10vh
+    background-color: $input-color
+    padding: 20px
+    border-radius: 12px
+    font-size: 28px
+    border: $border
+    margin: 20px
+    &::placeholder
+        color: $p-color
+
+
+.main-page
+    width: 76vw
+    height: 94vh
+    border-radius: 18px
+    justify-items: center
+    background-color: $main
+
+    @include grid
+    right: 0
+.main-text
+    @include flex-row
+.main
+    @include flex-row
+    padding: 3vh
+
+.font-bold
+    font-weight: 800
+    letter-spacing: 2px
+
+.navBarElement
+    padding: 12px
+    @include flex-row
+    gap: 4px
+    width: fit-content
+.nav-contain
+    @include flex
+    justify-content: flex-start
+    @include flex-column
+    width: 20vw
+    align-items: flex-start
+    &.active
+        border: 2px solid $gradient
+
+.tag
+    background: $input-color
+    padding: 8px 18px
+    border-radius: 12px
+    color: #fff
+    font-size: 22px
+    @include flex-row
+    gap: 4px
