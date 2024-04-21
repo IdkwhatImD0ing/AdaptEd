@@ -1,17 +1,22 @@
-from langchain.agents import AgentType, Tool, AgentExecutor, create_tool_calling_agent
-from langchain_community.utilities import GoogleSerperAPIWrapper
-from langchain import hub
-from langchain_openai import ChatOpenAI
-from langchain.tools import tool
-from typing import List, Dict, Any
-from openai import AsyncOpenAI
 import asyncio
-from nest_asyncio import apply
 import json
-
-apply()
+from typing import Any
+from typing import Dict
+from typing import List
 
 from dotenv import load_dotenv
+from langchain import hub
+from langchain.agents import AgentExecutor
+from langchain.agents import AgentType
+from langchain.agents import create_tool_calling_agent
+from langchain.agents import Tool
+from langchain.tools import tool
+from langchain_community.utilities import GoogleSerperAPIWrapper
+from langchain_openai import ChatOpenAI
+from nest_asyncio import apply
+from openai import AsyncOpenAI
+
+apply()
 
 load_dotenv()
 
@@ -29,39 +34,42 @@ Next, use get_descriptions tool to get the descriptions of the images.
 
 @tool
 def get_descriptions(prompt: str, images: List[str]) -> str:
-    """
-    This function takes in a list of images and a prompt, and explains why the image is relevant to the prompt.
+    """This function takes in a list of images and a prompt, and explains why the image is relevant to the prompt.
+
+    :param prompt: str:
+    :param images: List[str]:
+
     """
     client = AsyncOpenAI()
 
     async def get_one_description(image: str) -> str:
         response = await client.chat.completions.create(
             model="gpt-4-turbo",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": "Explain the contents of this image and how it is relevant to the prompt in two sentences.",
+            messages=[{
+                "role":
+                "user",
+                "content": [
+                    {
+                        "type":
+                        "text",
+                        "text":
+                        "Explain the contents of this image and how it is relevant to the prompt in two sentences.",
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": image,
                         },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": image,
-                            },
-                        },
-                    ],
-                }
-            ],
+                    },
+                ],
+            }],
             max_tokens=300,
         )
 
         return response.choices[0].message.content
 
     image_descriptions = asyncio.run(
-        asyncio.gather(*[get_one_description(image) for image in images])
-    )
+        asyncio.gather(*[get_one_description(image) for image in images]))
 
     # Link image urls with descriptions
     image_descriptions = [
@@ -88,16 +96,13 @@ async def get_images(topic, num_images):
 
     agent = create_tool_calling_agent(llm, tools, prompt)
     executor = AgentExecutor(agent=agent, tools=tools).with_config(
-        {"run_name": "Assistant"}
-    )
+        {"run_name": "Assistant"})
 
     topic = "Slide on stacks in data structures"
 
-    response = await executor.ainvoke(
-        {
-            "input": topic,
-        }
-    )
+    response = await executor.ainvoke({
+        "input": topic,
+    })
 
     output_format = """
     Return in the following json format:
@@ -118,12 +123,12 @@ async def get_images(topic, num_images):
     images = await client.chat.completions.create(
         model="gpt-4-turbo",
         response_format={"type": "json_object"},
-        messages=[
-            {
-                "role": "user",
-                "content": f"Images: {response['output']} \n\n Topic: {topic} \n\n From the images above, please select {num_images} images that you think are good for the given topic. \n\n {output_format}",
-            }
-        ],
+        messages=[{
+            "role":
+            "user",
+            "content":
+            f"Images: {response['output']} \n\n Topic: {topic} \n\n From the images above, please select {num_images} images that you think are good for the given topic. \n\n {output_format}",
+        }],
         max_tokens=2000,
     )
 
