@@ -1,3 +1,4 @@
+from wikipedia_tool import wikipedia_tool
 import google.generativeai as genai
 import google.generativeai as genai
 import ast
@@ -15,7 +16,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from wikipedia_tool import wikipedia_tool
 
 # Parse API keys stored in an environment variable and convert them into a Python list
 GEMINI_API_KEYS = os.environ.get("GEMINI_API_KEYS")
@@ -175,7 +175,8 @@ async def get_lecture(result):
     new_slides = []
 
     for slide in result["slides"]:
-        template = [t for t in templates if t["template_id"] == slide["template_id"]][0]
+        template = [t for t in templates if t["template_id"]
+                    == slide["template_id"]][0]
         num_images = template["num_images"]
 
         if num_images == 0:
@@ -195,7 +196,8 @@ async def get_lecture(result):
     # Iterate over the slides that require images
     image_index = 0
     for slide in result["slides"]:
-        template = [t for t in templates if t["template_id"] == slide["template_id"]][0]
+        template = [t for t in templates if t["template_id"]
+                    == slide["template_id"]][0]
         num_images = template["num_images"]
         if num_images != 0:
             new_slides.append({**slide, "images": images_results[image_index]})
