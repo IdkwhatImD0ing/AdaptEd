@@ -19,7 +19,6 @@ agentPrompt = "You are a helpful teacher."
 
 class LlmClient:
     """ """
-
     def __init__(self):
         self.client = ChatOpenAI(
             openai_api_key=os.environ["OPENAI_API_KEY"],
