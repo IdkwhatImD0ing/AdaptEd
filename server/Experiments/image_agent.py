@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from langchain.agents import AgentType, Tool, AgentExecutor, create_tool_calling_agent
 from langchain_community.utilities import GoogleSerperAPIWrapper
 from langchain import hub
@@ -11,7 +12,6 @@ import json
 
 apply()
 
-from dotenv import load_dotenv
 
 load_dotenv()
 
