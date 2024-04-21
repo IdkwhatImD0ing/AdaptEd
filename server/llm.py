@@ -59,7 +59,7 @@ class LlmClient:
     def convert_transcript_to_messages(self, transcript):
         """
 
-        :param transcript: 
+        :param transcript:
 
         """
         messages = []
@@ -79,7 +79,7 @@ class LlmClient:
         :param request: Request:
         :param request: Request:
         :param request: Request:
-        :param request: Request: 
+        :param request: Request:
 
         """
         prompt = [
@@ -106,7 +106,7 @@ class LlmClient:
         :param request: Request:
         :param request: Request:
         :param request: Request:
-        :param request: Request: 
+        :param request: Request:
 
         """
         print(request)
@@ -122,7 +122,7 @@ class LlmClient:
         def run_tool(func):
             """
 
-            :param func: 
+            :param func:
 
             """
             nonlocal func_call
