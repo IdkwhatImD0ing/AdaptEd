@@ -2,6 +2,7 @@ import logging
 import os
 from typing import Optional
 
+import generate_route
 import voice
 from aggregate import generate
 from dotenv import load_dotenv
@@ -17,6 +18,7 @@ load_dotenv()
 
 app = FastAPI()
 
+app.include_router(generate_route.router)
 app.include_router(voice.router)
 
 app.add_middleware(

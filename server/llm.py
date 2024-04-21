@@ -4,11 +4,11 @@ from fastapi import Request
 from langchain import hub
 from langchain.agents import AgentExecutor
 from langchain.agents import create_openai_tools_agent
-from langchain.chat_models import ChatOpenAI
 from langchain.schema import AIMessage
 from langchain.schema import HumanMessage
 from langchain.schema import SystemMessage
 from langchain.tools.base import StructuredTool
+from langchain_community.chat_models import ChatOpenAI
 
 # from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 # from langchain.tools import Tool
@@ -19,6 +19,7 @@ agentPrompt = "You are a helpful teacher."
 
 class LlmClient:
     """ """
+
     def __init__(self):
         self.client = ChatOpenAI(
             openai_api_key=os.environ["OPENAI_API_KEY"],
@@ -80,6 +81,7 @@ class LlmClient:
         :param request: Request:
         :param request: Request:
         :param request: Request:
+        :param request: Request:
 
         """
         prompt = [
@@ -103,6 +105,7 @@ class LlmClient:
     def draft_response(self, request: Request):
         """
 
+        :param request: Request:
         :param request: Request:
         :param request: Request:
         :param request: Request:

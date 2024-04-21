@@ -7,12 +7,9 @@ import random
 import google.generativeai as genai
 from dotenv import load_dotenv
 from image_agent import get_images
-from nest_asyncio import apply
 from templates import templates
 from wikipedia_tool import wikipedia_tool
 from youtube import get_data
-
-apply()
 
 # Load environment variables from a .env file
 
@@ -72,7 +69,7 @@ def sources_to_lecture(model, original_prompt, sources, audio, video):
     :param model: param original_prompt:
     :param audio: param video:
     :param original_prompt: param video:
-    :param video:
+    :param video: returns: A single lecture template combining all the source content.
     :returns: A single lecture template combining all the source content.
     :rtype: str
 
@@ -209,6 +206,35 @@ def generate(topic):
     sources = wikipedia_tool.run(topic)
     model = generate_new_model()
     audio, video = get_data(topic)
+
+    # Log the research tasks and subtasks
+    research_tasks = [
+        {
+            "title":
+            "Wikipedia Research",
+            "url":
+            wikipedia_tool.url,
+            "subtasks": [
+                "Extract relevant sections",
+                "Identify key concepts and definitions",
+            ],
+            "status":
+            "done",
+        },
+        {
+            "title":
+            "YouTube Video Analysis",
+            "url":
+            video["url"],
+            "subtasks": [
+                "Extract audio transcript",
+                "Identify key points and examples",
+            ],
+            "status":
+            "done",
+        },
+    ]
+
     result = sources_to_lecture(model, topic, sources, audio, video)
     if "```json" in result:
         # Get the JSON content from the result
@@ -218,6 +244,10 @@ def generate(topic):
     result = json.loads(result)
 
     lecture = asyncio.run(get_lecture(result))
+
+    # Add research tasks to the lecture object
+    lecture["research_tasks"] = research_tasks
+
     return lecture
 
 
@@ -229,6 +259,21 @@ def generate_simple(topic):
     """
     sources = wikipedia_tool.run(topic)
     model = generate_new_model()
+
+    # Log the research task and subtasks
+    research_tasks = [{
+        "title":
+        "Wikipedia Research",
+        "url":
+        wikipedia_tool.url,
+        "subtasks": [
+            "Extract relevant sections",
+            "Identify key concepts and definitions",
+        ],
+        "status":
+        "done",
+    }]
+
     result = sources_to_lecture_simple(model, topic, sources)
     if "```json" in result:
         # Get the JSON content from the result
@@ -238,4 +283,8 @@ def generate_simple(topic):
     result = json.loads(result)
 
     lecture = asyncio.run(get_lecture(result))
+
+    # Add research tasks to the lecture object
+    lecture["research_tasks"] = research_tasks
+
     return lecture
