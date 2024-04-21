@@ -1,7 +1,9 @@
 import { useContext, useEffect } from "react";
 import { DeckContext, DefaultTemplate } from "spectacle";
 
-export default function DeckControls() {
+export default function DeckControls(props: {
+  onSlideChange: (slideIndex: number) => void;
+}) {
   const {
     activeView: { slideIndex },
   } = useContext(DeckContext);
@@ -9,7 +11,7 @@ export default function DeckControls() {
   //   const setSlideNumber = useSlideStore((state) => state.setSlideNumber);
 
   useEffect(() => {
-    console.log(`Current slide number: ${slideIndex}`);
+    props.onSlideChange(slideIndex);
     // setSlideNumber(slideIndex);
   }, [slideIndex]);
 

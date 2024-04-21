@@ -72,7 +72,7 @@ export default function Voice(props: {
     );
 
     // Start conversation on mount
-    toggleConversation();
+    // toggleConversation();
 
     return () => {
       // Cleanup event listeners when the component is unmounted
@@ -162,5 +162,11 @@ export default function Voice(props: {
     }
   }
 
-  return <></>;
+  return (
+    <div>
+      {!isCalling && (
+        <button onClick={toggleConversation}>Start Conversation</button>
+      )}
+    </div>
+  );
 }
