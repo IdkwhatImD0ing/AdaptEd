@@ -67,9 +67,34 @@ class LlmClient:
                     "parameters": {},
                 },
             },
+            {
+                "type": "function",
+                "function": {
+                    "name": "prev_slide",
+                    "description": "Move to the previous slide if the user explicitly asks for it.",
+                    "parameters": {},
+                },
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "goto_slide",
+                    "description": "Move to the specified slide if the user explicitly asks for it.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "slide_number": {
+                                "type": "integer",
+                                "description": "The slide number you will move to.",
+                            },
+                        },
+                        "required": ["slide_number"],
+                    },
+                },
+            },
         ]
 
-        client_side_funcs = ["next_slide"]
+        client_side_funcs = ["next_slide", "prev_slide", "goto_slide"]
         server_side_funcs = []
 
         return functions, client_side_funcs, server_side_funcs

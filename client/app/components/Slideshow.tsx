@@ -1,19 +1,42 @@
 "use client";
 
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Deck,
-  Slide,
   Heading,
-  DefaultTemplate,
   SlideLayout,
   Text,
   Image,
+  DeckContext,
 } from "spectacle";
+import DeckControls from "./DeckControls";
+
+let channel: BroadcastChannel;
+
+export function skipToSlide(slideIndex: number, stepIndex: number = 0) {
+  if (!channel) {
+    channel = new BroadcastChannel("spectacle_presenter_bus");
+  }
+  channel.postMessage(
+    JSON.stringify({
+      type: "SYNC",
+      payload: {
+        slideIndex,
+        stepIndex,
+      },
+    })
+  );
+}
+
+export function shutdownSlideshow() {
+  if (channel) {
+    channel.close();
+  }
+}
 
 export default function Slideshow(props: { lecture: Lecture }) {
   return (
-    <Deck template={<DefaultTemplate />}>
+    <Deck template={<DeckControls />}>
       {props.lecture.slides.map((slide, index) => (
         <React.Fragment key={index}>
           {slide.template_id === 1 && (

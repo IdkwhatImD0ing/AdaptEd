@@ -18,7 +18,8 @@
     "react-dom": "^18",
     "react-resizable-panels": "^2.0.18",
     "react-reveal-slides": "bouzidanas/react-reveal-slides",
-    "spectacle": "^10.1.8"
+    "spectacle": "^10.1.8",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/node": "^20",

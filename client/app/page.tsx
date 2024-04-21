@@ -1,7 +1,9 @@
 "use client";
 
 import Voice from "./components/Voice";
-import Slideshow from "./components/Slideshow";
+import Slideshow, { skipToSlide } from "./components/Slideshow";
+import { useContext } from "react";
+import { DeckContext } from "spectacle";
 
 export default function Home() {
   const testLecture = {
@@ -147,6 +149,24 @@ export default function Home() {
     ],
   };
 
+  const handleFuncCallResult = (result: FunctionCall) => {
+    const { searchParams } = new URL(window.location.href);
+    const slide_index = searchParams.get("slideIndex");
+    const slide_number = slide_index ? parseInt(slide_index) : 0;
+    switch (result.name) {
+      case "next_slide":
+        skipToSlide(slide_number + 1);
+        break;
+      case "prev_slide":
+        skipToSlide(slide_number - 1);
+        break;
+      case "goto_slide":
+        console.log(result.arguments);
+        skipToSlide(result.arguments["slide_number"]);
+        break;
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div>
@@ -154,7 +174,7 @@ export default function Home() {
         <br />
         <a href="/api/auth/logout">Logout</a>
       </div>
-      <Voice />
+      <Voice onFuncCallResult={handleFuncCallResult} />
       <div>
         <h1>{testLecture.title}</h1>
         <Slideshow lecture={testLecture} />
