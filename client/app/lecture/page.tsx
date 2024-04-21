@@ -54,6 +54,21 @@ function page() {
             skipToSlide(result.arguments["slide_number"]);
           }
           break;
+        case "new_slide":
+          if (theLecture) {
+            const newSlide: Slide = {
+              title: result.arguments.lecture.slides[0].title,
+              template_id: result.arguments.lecture.slides[0].template_id,
+              images: result.arguments.lecture.slides[0].images,
+              texts: result.arguments.lecture.slides[0].texts,
+              speaker_notes: result.arguments.lecture.slides[0].speaker_notes,
+              image: result.arguments.lecture.slides[0].image,
+            };
+            theLecture.slides.splice(curr_slide + 1, 0, newSlide);
+            localStorage.setItem("lecture", JSON.stringify(theLecture));
+            skipToSlide(curr_slide + 1);
+          }
+          break;
       }
     } else {
       alert("No lecture provided.");
