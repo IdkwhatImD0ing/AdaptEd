@@ -80,8 +80,7 @@ class LlmClient:
                 + agentPrompt,
             )
         ]
-        transcript_messages = self.convert_transcript_to_messages(
-            request["transcript"])
+        transcript_messages = self.convert_transcript_to_messages(request["transcript"])
         prompt.extend(transcript_messages)
 
         if request["interaction_type"] == "reminder_required":
@@ -135,8 +134,7 @@ class LlmClient:
         agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
         result = agent_executor.invoke(
-            {"input": request["transcript"][-1]
-                ["content"], "chat_history": history}
+            {"input": request["transcript"][-1]["content"], "chat_history": history}
         )
 
         print(result)
