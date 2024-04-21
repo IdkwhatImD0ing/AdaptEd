@@ -179,6 +179,10 @@ export default function Home() {
         <h1>{testLecture.title}</h1>
         <Slideshow lecture={testLecture} />
       </div>
+      <Voice />
+      <h1 className="text-4xl font-bold">Learn anything</h1>
+      <input type="text" placeholder="type a topic..." />
+      <button type="submit">Submit form</button>
     </main>
   );
 }
