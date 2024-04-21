@@ -1,17 +1,14 @@
 import logging
 import os
+from typing import Optional
 
 import voice
-from dotenv import load_dotenv
-from fastapi import FastAPI
-from fastapi import HTTPException
-from fastapi import Request
-from fastapi import WebSocket
-from fastapi.middleware.cors import CORSMiddleware
-from mongodb_manager import MongoDBManager
-from manager import ConnectionManager
-from typing import Optional
 from aggregate import generate
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, Request, WebSocket
+from fastapi.middleware.cors import CORSMiddleware
+from manager import ConnectionManager
+from mongodb_manager import MongoDBManager
 
 load_dotenv()
 
