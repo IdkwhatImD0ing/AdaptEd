@@ -5,7 +5,7 @@ import NavBarElement from "./navBarElement"; // Assuming NavBarElement is a comp
 function NavBar() {
   return (
     <div className="nav-contain">
-      <img src="./AdaptED_logo.png" width={"140px"} />
+      <img src="./AdaptED_logo.png" width={"140px"} className = "main-logo" />
       <NavBarElement
         additionalClass="active"
         icon={<BarChartBig />}
@@ -18,3 +18,5 @@ function NavBar() {
 }
 
 export default NavBar;
+
+/* gridicons:stats-alt */
