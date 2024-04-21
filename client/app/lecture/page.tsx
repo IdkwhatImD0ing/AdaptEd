@@ -17,6 +17,8 @@ function page() {
     undefined
   );
 
+  const [messages, setMessages] = useState<MessageTranscript[]>([]);
+
   const getSlideIndex = () => {
     const { searchParams } = new URL(window.location.href);
     const slide_index = searchParams.get("slideIndex");
@@ -278,6 +280,8 @@ function page() {
 
   // If last message equals current slide speaker notes, slide has finished so time to move oon
   const handleUpdate = (update: { transcript: MessageTranscript[] }) => {
+    setMessages(update.transcript);
+
     const lastMessage = update.transcript[update.transcript.length - 1];
 
     const slide_number = getSlideIndex();
@@ -299,10 +303,10 @@ function page() {
       <PanelGroup direction="vertical">
         <Panel defaultSize={100}>
           <PanelGroup direction="horizontal">
-            <Panel minSize={25} defaultSize={75}>
+            <Panel minSize={25} defaultSize={100}>
               <div className="flex flex-col items-center">
                 <h1 className="text-2xl font-bold py-4">{testLecture.title}</h1>
-                <div className="w-full h-min relative flex">
+                <div className="w-full h-min relative flex  items-center justify-center">
                   <div className="absolute z-20 h-full top-0 left-0 w-full flex items-center justify-center">
                     <Voice
                       onFuncCallResult={handleFuncCallResult}
@@ -328,8 +332,12 @@ function page() {
               </div>
             </Panel>
             <PanelResizeHandle />
-            <Panel id="sidebar" minSize={25} defaultSize={25}>
-              <Sidebar />
+            <Panel
+              id="sidebar"
+              defaultSize={messages.length > 0 ? 25 : 0}
+              minSize={messages.length > 0 ? 25 : 0}
+            >
+              <Sidebar messages={messages} />
             </Panel>
           </PanelGroup>
         </Panel>
