@@ -30,7 +30,7 @@ class LlmClient:
     def convert_transcript_to_openai_messages(self, transcript):
         """
 
-        :param transcript: 
+        :param transcript:
 
         """
         messages = []
@@ -44,7 +44,7 @@ class LlmClient:
     def prepare_prompt(self, request: Request) -> list[ChatCompletionMessageParam]:
         """
 
-        :param request: Request: 
+        :param request: Request:
 
         """
         prompt = [
@@ -116,7 +116,7 @@ class LlmClient:
     def draft_response(self, request: Request):
         """
 
-        :param request: Request: 
+        :param request: Request:
 
         """
         print(request)
