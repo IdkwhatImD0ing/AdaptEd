@@ -67,10 +67,10 @@ def sources_to_lecture(model, original_prompt, sources, audio, video):
 
     :param sources: A list of sources, each containing a 'content' key with the source content.
     :type sources: list
-    :param model: 
-    :param original_prompt: 
-    :param audio: 
-    :param video: 
+    :param model:
+    :param original_prompt:
+    :param audio:
+    :param video:
     :returns: A single lecture template combining all the source content.
     :rtype: str
 
@@ -85,7 +85,7 @@ def sources_to_lecture(model, original_prompt, sources, audio, video):
         + """
 You are an advanced assistant that is in charge of aggregating multiple sources of information into a lecture based on a specific prompt.
 Output 8 different slides on the topic given above using the sources provided as well as the given templates.
-Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting. 
+Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting.
 Keep text content short and concise, at most 8 words per text.
 Make sure you always start off with a title slide.
 
@@ -105,7 +105,7 @@ Make sure the response is in the following format, only output the keys and valu
               "stacks are used in DFS"
           ],
           "speaker_notes" : A script for the speaker to read
-        }   
+        }
     ]
 }
 """
@@ -126,8 +126,8 @@ def sources_to_lecture_simple(model, original_prompt, sources):
 
     :param sources: A list of sources, each containing a 'content' key with the source content.
     :type sources: list
-    :param model: 
-    :param original_prompt: 
+    :param model:
+    :param original_prompt:
     :returns: A single lecture template combining all the source content.
     :rtype: str
 
@@ -142,7 +142,7 @@ def sources_to_lecture_simple(model, original_prompt, sources):
         + """
 You are an advanced assistant that is in charge of aggregating multiple sources of information into a lecture based on a specific prompt.
 Output 8 different slides on the topic given above using the sources provided as well as the given templates.
-Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting. 
+Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting.
 Keep text content short and concise, at most 8 words per text.
 Make sure you always start off with a title slide.
 
@@ -162,7 +162,7 @@ Make sure the response is in the following format, only output the keys and valu
               "stacks are used in DFS"
           ],
           "speaker_notes" : A script for the speaker to read
-        }   
+        }
     ]
 }
 """
