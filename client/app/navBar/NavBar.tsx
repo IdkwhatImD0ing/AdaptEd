@@ -20,5 +20,3 @@ function NavBar() {
 export default NavBar;
 
 /* gridicons:stats-alt */
-
-
