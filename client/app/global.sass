@@ -6,7 +6,7 @@ $text-color: #FFF
 $sec-text-color: #1B1B1E
 $prim: #9F03FE
 $hover-prim: #8200D1
-$hover-sec: darkgrey 
+$hover-sec: darkgrey
 $sec: #F5F4F7
 $hover-sec: #EDEDED
 $border: 3px solid #DEDEDE
@@ -22,141 +22,143 @@ $h1_header: 72px
 $h2: 18px
 
 html,
-body  
-  margin: 0 
+body
+  margin: 0
   background-color: $bg
-  overflow-x: hidden 
+  overflow-x: hidden
   font-family: 'Inter', sans-serif
- 
+
 h1
     font-size: $h1_header
     font-weight: 600
     color: $text-color
-    margin: 0 
-    padding: 0 
+    margin: 0
+    padding: 0
     line-height: 1.2em
 h2
     font-size: 68px
     font-weight: 600
     color: $p-color
-    margin: 0 
-    padding: 0 
+    margin: 0
+    padding: 0
     line-height: 1.2em
     span
         color: $text-color
         style: italic
- 
-//* buttons
-button  
-  border: 0 
-  outline: 0 
-  cursor: pointer 
 
- 
+//* buttons
+button
+  border: 0
+  outline: 0
+  cursor: pointer
+
+
 
 //* reuseable props
-@mixin grid  
-  display: grid 
-  place-content: center 
- 
-@mixin grid-row  
-  @include grid 
-  display: grid 
-  grid-template-columns: repeat(3, 1fr) 
-  align-items: center 
-  justify-content: center 
+@mixin grid
+  display: grid
+  place-content: center
+
+@mixin grid-row
+  @include grid
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  align-items: center
+  justify-content: center
   justify-items: center
 
 
- 
-@mixin grid-column  
-  @include grid 
-  display: grid 
-  grid-template-columns: auto 
-  align-items: center 
-  justify-content: center 
- 
 
-@mixin flex  
-  display: flex 
-  justify-content: center 
-  align-items: center 
- 
-@mixin flex-row  
-  @include flex 
-  flex-direction: row 
-  justify-content: space-between 
- 
-@mixin flex-column  
-  @include flex 
-  flex-direction: column 
- 
+@mixin grid-column
+  @include grid
+  display: grid
+  grid-template-columns: auto
+  align-items: center
+  justify-content: center
+
+
+@mixin flex
+  display: flex
+  justify-content: center
+  align-items: center
+
+@mixin flex-row
+  @include flex
+  flex-direction: row
+  justify-content: space-between
+
+@mixin flex-column
+  @include flex
+  flex-direction: column
+
 
 //* general formatting
 
 section,
-.container  
-  @include grid 
+.container
+  @include grid
   height: 100vh
   & img
     width: 80vw
- 
-.flex-row  
-  @include flex 
-  @include flex-row 
- 
-.flex-column  
-  @include flex 
-  @include flex-column 
- 
-.grid-row  
-  @include grid 
-  @include grid-row 
- 
-.grid-column  
-  @include grid 
-  @include grid-column 
- 
+
+.flex-row
+  @include flex
+  @include flex-row
+
+.flex-column
+  @include flex
+  @include flex-column
+
+.grid-row
+  @include grid
+  @include grid-row
+
+.grid-column
+  @include grid
+  @include grid-column
+
 
 
 
 //* reusable components
 //* regular button
-button  
+button
+  width: fit-content
+  gap: 4px
   @include flex-row
-  cursor: pointer 
-  padding: 12px 18px 
-  white-space: nowrap 
-  outline: none 
-  border: none 
+  cursor: pointer
+  padding: 12px 18px
+  white-space: nowrap
+  outline: none
+  border: none
   font-size: $h2
   font-weight: 600
   font-size: 26px
   border-radius: $small-border
-  &.primary 
-    background: linear-gradient(180deg, rgba(246, 248, 255, 1) 0%, rgba(189, 200, 227, 1) 100%) 
-    color: $sec-text-color 
-    gap: 8px 
-    transition: transform 500ms ease-in-out, border-image 500ms ease-in-out 
+  &.primary
+    background: linear-gradient(180deg, rgba(246, 248, 255, 1) 0%, rgba(189, 200, 227, 1) 100%)
+    color: $sec-text-color
+    gap: 8px
+    transition: transform 500ms ease-in-out, border-image 500ms ease-in-out
     border-radius: 12px
-    border: 4px solid transparent 
+    border: 4px solid transparent
 
-    &:hover 
-      transform: scale(1.05) 
-    
-      
+    &:hover
+      transform: scale(1.05)
+
+
     //   display: inline-flex
     //   border: .01px transparent
     //   border-radius: 12px
     //   background-image: linear-gradient(white, white), radial-gradient(circle at top left, #7BCDFE, rgba(135, 106, 250, 1))
     //   background-origin: border-box
     //   background-clip: content-box, border-box
-  &.secondary  
-    background-color: $sec 
+  &.secondary
+    background-color: $sec
     color: $text-color
     border: $border
-    &:hover  
-      background-color: $hover-sec 
+    &:hover
+      background-color: $hover-sec
   &.hero
     background: linear-gradient(93deg, #C700E7 0.74%, #6303FF 99.48%)
     color: #fff
@@ -167,10 +169,10 @@ button
     &:hover
         background-image: linear-gradient(120deg, lighten(#C700E7, 10%) 0%, lighten(#6303FF, 10%) 100%)
         transform: scale(1.05)
-    
-     
-   
- 
+
+
+
+
 
 //* button with outline
 
@@ -181,10 +183,10 @@ button
     width: 100vw
     position: fixed
     z-index: 10000
-    
-nav  
+
+nav
   width: fit-content
-  height: fit-content 
+  height: fit-content
   font-size: $h2
   font-weight: 400
   color: $text-color
@@ -193,36 +195,37 @@ nav
   border-radius: 100px
   border: $border
   backdrop-filter: blur(10px)
-  
-  ul  
-    margin: 0 
-    padding: 0 
-    list-style: none 
-  li  
+
+  ul
+    margin: 0
+    padding: 0
+    list-style: none
+  li
 
 
-  a  
-    display: block 
-    padding: 6px 12px 
+  a
+    display: block
+    padding: 6px 12px
     border-radius: 100px
-    text-decoration: none 
+    text-decoration: none
     transition: background-color 200ms ease
     width: fit-content
     white-space: nowrap
-    &:hover  
-      background-color: $prim 
+    &:hover
+      background-color: $prim
       color: white
       cursor: pointer
-   
+
 //* hero
 .hero
     @include grid
     width: 100vw
-    height: 110vh
+    height: 120vh
     gap: 22px
-    background-size: cover  
+    background-size: cover
     background-position: center
     justify-items: center
+
     background-image: url('../public/background_adapted.svg')
 .title
     background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(153, 153, 153, 1) 100%)
@@ -230,6 +233,7 @@ nav
     -webkit-background-clip: text
     -webkit-text-fill-color: transparent
     text-align: center
+
 .parallax
     @include grid
     width: 100vw
@@ -273,21 +277,39 @@ nav
     font-size: 28px
     font-weight: 400
     color: $p-color
-    
+
 .large-input
+    width: 20vw
+    height: 10vh
     background-color: $input-color
-    padding: 12px
+    padding: 20px
     border-radius: 12px
+    font-size: 28px
     border: $border
+    margin: 20px
     &::placeholder
         color: $p-color
+
+
 .main-page
-    width: 90vw
-    height: 90vh
+    width: 76vw
+    height: 94vh
     border-radius: 18px
+    justify-items: center
     background-color: $main
+
     @include grid
     right: 0
+.main-text
+    @include flex-row
+.main
+    @include flex-row
+    padding: 3vh
+
+.font-bold
+    font-weight: 800
+    letter-spacing: 2px
+
 .navBarElement
     padding: 12px
     @include flex-row
@@ -301,8 +323,7 @@ nav
     align-items: flex-start
     &.active
         border: 2px solid $gradient
-.main
-    @include flex-row
+
 .tag
     background: $input-color
     padding: 8px 18px
