@@ -14,8 +14,6 @@ $card: #DEDEDE
 $input-color: #262628
 $border: 2px solid #3B3D41
 $gradient: linear-gradient(to right, rgba(117, 247, 255, 1), rgba(135, 106, 250, 1), rgba(209, 62, 233, 1), rgba(32, 138, 255, 1))
-
-
 $p-color: #646464
 
 // layout
@@ -53,12 +51,7 @@ button
   border: 0 
   outline: 0 
   cursor: pointer 
-  &:hover  
-   
-  &:focus  
-   
-  &:active  
-   
+
  
 
 //* reuseable props
@@ -104,6 +97,9 @@ button
 section,
 .container  
   @include grid 
+  height: 100vh
+  & img
+    width: 80vw
  
 .flex-row  
   @include flex 
@@ -137,15 +133,26 @@ button
   border: none 
   font-size: $h2
   font-weight: 600
-  font-size: 24px
+  font-size: 26px
   border-radius: $small-border
-  &.primary  
-    background: linear-gradient(180deg, rgba(246, 248, 255, 1) 0%, rgba(189, 200, 227, 1) 100%)
-    color: $sec-text-color
-    gap: 8px
-    &:hover  
-      background-color: $hover-prim 
-      border: $gradient
+  &.primary 
+    background: linear-gradient(180deg, rgba(246, 248, 255, 1) 0%, rgba(189, 200, 227, 1) 100%) 
+    color: $sec-text-color 
+    gap: 8px 
+    transition: transform 500ms ease-in-out, border-image 500ms ease-in-out 
+    border-radius: 12px
+    border: 4px solid transparent 
+
+    &:hover 
+      transform: scale(1.05) 
+    
+      
+    //   display: inline-flex
+    //   border: .01px transparent
+    //   border-radius: 12px
+    //   background-image: linear-gradient(white, white), radial-gradient(circle at top left, #7BCDFE, rgba(135, 106, 250, 1))
+    //   background-origin: border-box
+    //   background-clip: content-box, border-box
   &.secondary  
     background-color: $sec 
     color: $text-color
@@ -171,7 +178,7 @@ button
 
 
 //* nav
-.nav-contain
+.nav-landing-contain
     padding: 22px
     width: 100vw
     position: fixed
@@ -183,8 +190,8 @@ nav
   font-size: $h2
   font-weight: 400
   color: $text-color
-  background-color: #fff
-  padding: 12px
+  background-color: #242425
+  padding: 18px 22px
   border-radius: 100px
   border: $border
   backdrop-filter: blur(10px)
@@ -203,6 +210,7 @@ nav
     text-decoration: none 
     transition: background-color 200ms ease
     width: fit-content
+    white-space: nowrap
     &:hover  
       background-color: $prim 
       color: white
@@ -212,11 +220,12 @@ nav
 .hero
     @include grid
     width: 100vw
-    height: 100vh
+    height: 110vh
     gap: 22px
     background-size: cover  
     background-position: center
     justify-items: center
+    background-image: url('../public/background_adapted.svg')
 .title
     background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(153, 153, 153, 1) 100%)
     background-clip: text
@@ -315,8 +324,8 @@ nav
 
 .tag
     background: $input-color
-    padding: 6px 18px
-    border-radius: 8px
+    padding: 8px 18px
+    border-radius: 12px
     color: #fff
     font-size: 22px
     @include flex-row
