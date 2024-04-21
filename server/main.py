@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi import Request
 from fastapi import WebSocket
+from fastapi import Form
 from fastapi.middleware.cors import CORSMiddleware
 from mongodb_manager import MongoDBManager
 from manager import ConnectionManager
@@ -65,11 +66,9 @@ async def get_template(template_id: int):
         raise HTTPException(status_code=404, detail="Template not found")
     return template
 
-@app.post("/lectures") 
-async def generate_lecture(topic: str):
+@app.post("/generate_lecture") 
+async def generate_lecture(topic: str = Form(...)):
     """
     Generate a lecture based on the given topic.
     """ 
-    return generate(topic)
-
-            
+    return generate(topic)  
