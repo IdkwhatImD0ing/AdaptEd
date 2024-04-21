@@ -15,61 +15,65 @@ interface RegisterCallResponse {
   sampleRate: number;
 }
 
-type MessageTranscript = {
+export type MessageTranscript = {
   role: string;
   content: string;
 };
 
 export default function Voice(props: {
-  onFuncCallResult: (result: any) => void;
-  onDataSocketConnect: () => void;
-  retellClientRef: React.MutableRefObject<RetellWebClient | undefined>;
-  funcCallSocketRef: React.MutableRefObject<WebSocket | undefined>;
+  onFuncCallResult?: (result: any) => void;
+  onDataSocketConnect?: () => void;
+  onUpdate?: (update: { transcript: MessageTranscript[] }) => void;
+  funcCallSocket: WebSocket | undefined;
+  retellClient: RetellWebClient | undefined;
+  setFuncCallSocket: (funcCallSocket: WebSocket) => void;
+  setRetellClient: (retellClient: RetellWebClient) => void;
 }) {
   const [isCalling, setIsCalling] = useState(false);
   const [userSpeaking, setUserSpeaking] = useState(false);
 
-  const { retellClientRef, funcCallSocketRef } = props;
-
   useEffect(() => {
     // If SDK already initialized
-    if (retellClientRef.current) {
+    if (props.retellClient) {
+      console.log("SDK already initialized");
       return;
     }
 
     console.log("Mounted");
 
     // Initialize the SDK
-    retellClientRef.current = new RetellWebClient();
+    const newRetellClient = new RetellWebClient();
+    props.setRetellClient(newRetellClient);
 
     // Setup event listeners
-    retellClientRef.current.on("conversationStarted", () => {
+    newRetellClient.on("conversationStarted", () => {
       console.log("conversationStarted");
     });
 
-    retellClientRef.current.on("audio", (_audio: Uint8Array) => {
+    newRetellClient.on("audio", (_audio: Uint8Array) => {
       console.log("There is audio");
       setUserSpeaking(true);
     });
 
-    retellClientRef.current.on("conversationEnded", ({ code, reason }) => {
+    newRetellClient.on("conversationEnded", ({ code, reason }) => {
       console.log("Closed with code:", code, ", reason:", reason);
       setUserSpeaking(false);
       setIsCalling(false); // Update button to "Start" when conversation ends
     });
 
-    retellClientRef.current.on("error", (error) => {
+    newRetellClient.on("error", (error) => {
       console.error("An error occurred:", error);
       setIsCalling(false); // Update button to "Start" in case of error
     });
 
-    retellClientRef.current.on(
+    newRetellClient.on(
       "update",
       (update: { transcript: MessageTranscript[] }) => {
         // Update messages
         // setMessages(update.transcript);
         // Print live transcript as needed
         console.log("update", update);
+        props.onUpdate?.(update);
       }
     );
 
@@ -78,52 +82,51 @@ export default function Voice(props: {
 
     return () => {
       // Cleanup event listeners when the component is unmounted
-      if (retellClientRef.current) {
-        retellClientRef.current.stopConversation();
-        retellClientRef.current.off("conversationStarted");
-        retellClientRef.current.off("audio");
-        retellClientRef.current.off("conversationEnded");
-        retellClientRef.current.off("error");
-        retellClientRef.current.off("update");
+      if (newRetellClient) {
+        newRetellClient.stopConversation();
+        newRetellClient.off("conversationStarted");
+        newRetellClient.off("audio");
+        newRetellClient.off("conversationEnded");
+        newRetellClient.off("error");
+        newRetellClient.off("update");
       }
     };
   }, []);
 
   const connectFuncCallWebsocket = async (call_id: string) => {
     // Connect to the function call websocket
-    funcCallSocketRef.current = new WebSocket(
-      FUNC_CALL_ENDPOINT + "/" + call_id
-    );
+    const newFuncCallSocket = new WebSocket(FUNC_CALL_ENDPOINT + "/" + call_id);
+    props.setFuncCallSocket(newFuncCallSocket);
 
-    funcCallSocketRef.current.onopen = () => {
+    newFuncCallSocket.onopen = () => {
       console.log("Function call websocket connected");
-      props.onDataSocketConnect();
+      props.onDataSocketConnect?.();
     };
 
-    funcCallSocketRef.current.onmessage = (event) => {
+    newFuncCallSocket.onmessage = (event) => {
       try {
         const funcCallResult: FunctionCall = JSON.parse(event.data);
 
         console.log("Function call result:", funcCallResult);
-        props.onFuncCallResult(funcCallResult);
+        props.onFuncCallResult?.(funcCallResult);
       } catch (error) {
         console.error("Error parsing function call result:", error);
       }
     };
 
-    funcCallSocketRef.current.onclose = () => {
+    newFuncCallSocket.onclose = () => {
       console.log("Function call websocket disconnected");
     };
   };
 
   const toggleConversation = async () => {
     if (isCalling) {
-      retellClientRef.current!.stopConversation();
+      props.retellClient!.stopConversation();
     } else {
       const registerCallResponse = await registerCall(AGENT_ID);
       if (registerCallResponse.callId) {
-        retellClientRef
-          .current!.startConversation({
+        props
+          .retellClient!.startConversation({
             callId: registerCallResponse.callId,
             sampleRate: registerCallResponse.sampleRate,
             enableUpdate: true,

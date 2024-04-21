@@ -23,6 +23,8 @@
     "react-resizable-panels": "^2.0.18",
     "react-reveal-slides": "bouzidanas/react-reveal-slides",
     "spectacle": "^10.1.8",
+    "utf-8-validate": "^6.0.3",
+    "ws": "^8.16.0",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

@@ -226,7 +226,7 @@ def generate(topic):
 def generate_simple(topic):
     sources = wikipedia_tool.run(topic)
     model = generate_new_model()
-    sources_to_lecture_simple(model, topic, sources)
+    result = sources_to_lecture_simple(model, topic, sources)
     if "```json" in result:
         # Get the JSON content from the result
         result = result.split("```json")[1]

@@ -1,16 +1,32 @@
 "use client";
 import Image from "next/image";
 
-import Voice from "./components/Voice";
+import Voice, { MessageTranscript } from "./components/Voice";
 import Slideshow, { skipToSlide } from "./components/Slideshow";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { DeckContext } from "spectacle";
 import { title } from "process";
 import { RetellWebClient } from "retell-client-js-sdk";
+
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import Sidebar from "./components/Sidebar";
 import NavBar from "./navBar/NavBar";
 import { WandSparkles, Sparkles } from "lucide-react";
 import NavBarLanding from "./NavBarLanding";
 export default function Home() {
+  const [retellClient, setRetellClient] = useState<RetellWebClient | undefined>(
+    undefined
+  );
+  const [funcCallSocket, setFuncCallSocket] = useState<WebSocket | undefined>(
+    undefined
+  );
+
+  const getSlideIndex = () => {
+    const { searchParams } = new URL(window.location.href);
+    const slide_index = searchParams.get("slideIndex");
+    return slide_index ? parseInt(slide_index) : 0;
+  };
+
   const testLecture: Lecture = {
     title: "Introduction to Red-Black Trees",
     description:
@@ -232,72 +248,113 @@ export default function Home() {
   };
 
   const handleFuncCallResult = (result: FunctionCall) => {
-    const { searchParams } = new URL(window.location.href);
-    const slide_index = searchParams.get("slideIndex");
-    const slide_number = slide_index ? parseInt(slide_index) : 0;
+    const curr_slide = getSlideIndex();
     switch (result.name) {
       case "next_slide":
-        skipToSlide(slide_number + 1);
+        // If the slide is not the last one, skip to the next slide
+        if (curr_slide + 1 < testLecture.slides.length) {
+          skipToSlide(curr_slide + 1);
+        }
         break;
       case "prev_slide":
-        skipToSlide(slide_number - 1);
+        // If the slide is not the first one, skip to the previous slide
+        if (curr_slide - 1 >= 0) {
+          skipToSlide(curr_slide - 1);
+        }
         break;
       case "goto_slide":
-        skipToSlide(result.arguments["slide_number"]);
+        const slide_number = result.arguments["slide_number"];
+        // If the slide number is within the bounds of the slides array, skip to that slide
+        if (slide_number >= 0 && slide_number < testLecture.slides.length) {
+          skipToSlide(result.arguments["slide_number"]);
+        }
         break;
     }
   };
 
-  const retellClientRef = useRef<RetellWebClient>();
-  const funcCallSocketRef = useRef<WebSocket>();
-
+  // Have the voice AI speak the slide speaker notes if you change slides
   const handleSlideChange = (slideIndex: number) => {
     console.log("Current slide number:", slideIndex);
-    // Have the voice AI speak the slide speaker notes
     const slide = testLecture.slides[slideIndex];
     if (slide.speaker_notes) {
-      funcCallSocketRef.current?.send(slide.speaker_notes);
+      funcCallSocket?.send(slide.speaker_notes);
     }
   };
 
+  // When data socket connects, read first slide
   const handleDataSocketConnect = () => {
     setTimeout(() => {
-      const { searchParams } = new URL(window.location.href);
-      const slide_index = searchParams.get("slideIndex");
-      const slide_number = slide_index ? parseInt(slide_index) : 0;
+      const slide_number = getSlideIndex();
       const slide = testLecture.slides[slide_number];
       console.log("CONVERSATION STARTED", slide);
       if (slide.speaker_notes) {
-        funcCallSocketRef.current?.send(slide.speaker_notes);
+        funcCallSocket?.send(slide.speaker_notes);
       }
     }, 5000);
   };
 
+  // If last message equals current slide speaker notes, slide has finished so time to move oon
+  const handleUpdate = (update: { transcript: MessageTranscript[] }) => {
+    const lastMessage = update.transcript[update.transcript.length - 1];
+
+    const slide_number = getSlideIndex();
+    const speaker_notes = testLecture.slides[slide_number].speaker_notes;
+
+    if (lastMessage.content.includes(speaker_notes!)) {
+      // If the slide is not the last one, skip to the next slide
+      if (slide_number + 1 < testLecture.slides.length) {
+        setTimeout(() => {
+          skipToSlide(slide_number + 1);
+        }, 2500);
+      }
+    }
+  };
+
   return (
     <div>
-    <NavBarLanding />
-    <main className="hero">
-      <div className="tag">
-        <WandSparkles />
-        conversational learning
-      </div>
-      <h1 className="title">
-        Learn through conversations.
-        <br />
-        Not textbooks.
-      </h1>
-      <button className="primary">
-        {" "}
-        <Sparkles /> Make magic
-      </button>
-    </main>
-    <section>
-      <img src="./mockupLanding_adapted.svg" alt="" /> 
-    </section>
-    <Voice />
-  </div>
- 
-       
-   
+      <NavBarLanding />
+      <main className="hero">
+        <div className="tag">
+          <WandSparkles />
+          conversational learning
+        </div>
+        <h1 className="title">
+          Learn through conversations.
+          <br />
+        </h1>
+        <a href="/api/auth/logout">Logout</a>
+
+        <Voice
+          onFuncCallResult={handleFuncCallResult}
+          onDataSocketConnect={handleDataSocketConnect}
+          funcCallSocket={funcCallSocket}
+          retellClient={retellClient}
+          setFuncCallSocket={setFuncCallSocket}
+          setRetellClient={setRetellClient}
+          onUpdate={handleUpdate}
+        />
+        <PanelGroup direction="horizontal">
+          <Panel minSize={25} defaultSize={75} order={1}>
+            <Slideshow
+              lecture={testLecture}
+              onSlideChange={handleSlideChange}
+            />
+          </Panel>
+          <PanelResizeHandle />
+          <Panel id="sidebar" minSize={25} defaultSize={25} order={2}>
+            <Sidebar />
+          </Panel>
+        </PanelGroup>
+        <div>
+          <h1>{testLecture.title}</h1>
+        </div>
+        <h1 className="text-4xl font-bold">Learn anything</h1>
+        <input type="text" placeholder="type a topic..." />
+        <button type="submit">Submit form</button>
+      </main>
+      <section>
+        <img src="./mockupLanding_adapted.svg" alt="" />
+      </section>
+    </div>
   );
 }
