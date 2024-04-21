@@ -56,7 +56,7 @@ class LlmClient:
     def convert_transcript_to_messages(self, transcript):
         """
 
-        :param transcript:
+        :param transcript: 
 
         """
         messages = []
@@ -75,6 +75,7 @@ class LlmClient:
         :param request: Request:
         :param request: Request:
         :param request: Request:
+        :param request: Request: 
 
         """
         prompt = [
@@ -100,6 +101,7 @@ class LlmClient:
         :param request: Request:
         :param request: Request:
         :param request: Request:
+        :param request: Request: 
 
         """
         print(request)
@@ -115,7 +117,7 @@ class LlmClient:
         def next_or_prev_slide(func):
             """
 
-            :param func:
+            :param func: 
 
             """
             nonlocal func_call
