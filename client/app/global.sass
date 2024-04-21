@@ -127,6 +127,8 @@ section,
 //* reusable components
 //* regular button
 button  
+  width: fit-content
+  gap: 4px
   @include flex-row
   cursor: pointer 
   padding: 12px 18px 
@@ -161,7 +163,7 @@ button
         background-image: linear-gradient(120deg, lighten(#C700E7, 10%) 0%, lighten(#6303FF, 10%) 100%)
         transform: scale(1.05)
     
-     
+    
    
  
 
@@ -266,19 +268,37 @@ nav
     color: $p-color
     
 .large-input
+    width: 20vw
+    height: 10vh
     background-color: $input-color
-    padding: 12px
+    padding: 20px
     border-radius: 12px
+    font-size: 28px
     border: $border
+    margin: 20px
     &::placeholder
         color: $p-color
+    
+
 .main-page
-    width: 80vw
-    height: 90vh
+    width: 76vw
+    height: 94vh
     border-radius: 18px
+    justify-items: center 
     background-color: $main
+
     @include grid
     right: 0
+.main-text
+    @include flex-row
+.main
+    @include flex-row
+    padding: 3vh
+
+.font-bold
+    font-weight: 800
+    letter-spacing: 2px
+
 .navBarElement
     padding: 12px
     @include flex-row
@@ -292,8 +312,7 @@ nav
     align-items: flex-start
     &.active
         border: 2px solid $gradient
-.main
-    @include flex-row
+
 .tag
     background: $input-color
     padding: 6px 18px
