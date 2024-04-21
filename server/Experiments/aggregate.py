@@ -69,11 +69,15 @@ def generate_new_model():
 def sources_to_lecture(model, original_prompt, sources, audio, video):
     """Converts a list of sources into a single lecture template.
 
-    Args:
-        sources (list): A list of sources, each containing a 'content' key with the source content.
+    :param sources: A list of sources, each containing a 'content' key with the source content.
+    :type sources: list
+    :param model: 
+    :param original_prompt: 
+    :param audio: 
+    :param video: 
+    :returns: A single lecture template combining all the source content.
+    :rtype: str
 
-    Returns:
-        str: A single lecture template combining all the source content.
     """
     prompt = (
         "Available templates: \n\n"
@@ -124,11 +128,13 @@ Make sure the response is in the following format, only output the keys and valu
 def sources_to_lecture_simple(model, original_prompt, sources):
     """Converts a list of sources into a single lecture template.
 
-    Args:
-        sources (list): A list of sources, each containing a 'content' key with the source content.
+    :param sources: A list of sources, each containing a 'content' key with the source content.
+    :type sources: list
+    :param model: 
+    :param original_prompt: 
+    :returns: A single lecture template combining all the source content.
+    :rtype: str
 
-    Returns:
-        str: A single lecture template combining all the source content.
     """
     prompt = (
         "Available templates: \n\n"
@@ -208,6 +214,11 @@ async def get_lecture(result):
 
 
 def generate(topic):
+    """
+
+    :param topic: 
+
+    """
     sources = wikipedia_tool.run(topic)
     model = generate_new_model()
     audio, video = get_data(topic)
@@ -224,6 +235,11 @@ def generate(topic):
 
 
 def generate_simple(topic):
+    """
+
+    :param topic: 
+
+    """
     sources = wikipedia_tool.run(topic)
     model = generate_new_model()
     result = sources_to_lecture_simple(model, topic, sources)
