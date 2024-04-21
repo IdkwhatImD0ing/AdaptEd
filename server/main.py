@@ -1,19 +1,19 @@
 import logging
 import os
 
+import voice
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
 from mongodb_manager import MongoDBManager
-# import voice
 
 load_dotenv()
 
 app = FastAPI()
 
-# app.include_router(voice.router)
+app.include_router(voice.router)
 
 app.add_middleware(
     CORSMiddleware,
