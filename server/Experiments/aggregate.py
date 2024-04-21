@@ -72,7 +72,7 @@ def sources_to_lecture(model, original_prompt, sources, audio, video):
     :param model: param original_prompt:
     :param audio: param video:
     :param original_prompt: param video:
-    :param video:
+    :param video: returns: A single lecture template combining all the source content.
     :returns: A single lecture template combining all the source content.
     :rtype: str
 
