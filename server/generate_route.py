@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Request
 from aggregate import generate, generate_simple
+from fastapi import APIRouter, Request
 
 router = APIRouter()
 

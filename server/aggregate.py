@@ -1,18 +1,16 @@
-from wikipedia_tool import wikipedia_tool
-import google.generativeai as genai
-import google.generativeai as genai
 import ast
+import asyncio
+import json
 import os
 import random
-from templates import templates
-import json
-from image_agent import get_images
-from youtube import get_data
-import asyncio
 
-
+import google.generativeai as genai
 # Load environment variables from a .env file
 from dotenv import load_dotenv
+from image_agent import get_images
+from templates import templates
+from wikipedia_tool import wikipedia_tool
+from youtube import get_data
 
 load_dotenv()
 
