@@ -17,9 +17,6 @@ random.shuffle(KEY_LIST)
 # Initialize a global index to track the current API key being used
 current_api_key_index = 0
 
-# List to store historical messages for reference or logging
-messages = []
-
 def cycle_api_key():
     """Retrieve the next API key from the list, cycling back to the start if necessary."""
     global current_api_key_index
