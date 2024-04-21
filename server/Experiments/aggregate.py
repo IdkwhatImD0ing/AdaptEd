@@ -178,8 +178,7 @@ async def get_lecture(result):
     new_slides = []
 
     for slide in result["slides"]:
-        template = [t for t in templates if t["template_id"]
-                    == slide["template_id"]][0]
+        template = [t for t in templates if t["template_id"] == slide["template_id"]][0]
         num_images = template["num_images"]
 
         if num_images == 0:
@@ -199,8 +198,7 @@ async def get_lecture(result):
     # Iterate over the slides that require images
     image_index = 0
     for slide in result["slides"]:
-        template = [t for t in templates if t["template_id"]
-                    == slide["template_id"]][0]
+        template = [t for t in templates if t["template_id"] == slide["template_id"]][0]
         num_images = template["num_images"]
         if num_images != 0:
             new_slides.append({**slide, "images": images_results[image_index]})
