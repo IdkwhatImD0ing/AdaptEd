@@ -1,5 +1,7 @@
 email-validator==2.1.1
 fastapi==0.110.2
+google-generativeai==0.5.2
+grpcio-status==1.62.2
 httptools==0.6.1
 hume==0.4.2
 importlib-metadata==7.1.0
@@ -18,11 +20,13 @@ pydantic-extra-types==2.6.0
 pydantic-settings==2.2.1
 pydub==0.25.1
 pymongo==3.11.0
+pysocks==1.7.1
 python-multipart==0.0.9
 pytube==15.0.0
 pyyaml==6.0.1
 retell==0.5.1
 uagents==0.11.1
+trio-websocket==0.11.1
 ujson==5.9.0
 uvloop==0.19.0
 watchfiles==0.21.0
