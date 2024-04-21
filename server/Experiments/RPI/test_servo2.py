@@ -1,6 +1,7 @@
-from gpiozero import Servo
 import time
+
 import cv2
+from gpiozero import Servo
 
 # Initialize the camera
 # 0 is usually the default value for a single camera setup
