@@ -23,7 +23,6 @@ Remember, the images should be relevant to the topic and helpful for the student
 
 First find four images that you think are good for the given topic.
 Next, use get_descriptions tool to get the descriptions of the images.
-
 """
 
 
@@ -35,29 +34,32 @@ def get_descriptions(prompt: str, images: List[str]) -> str:
     client = AsyncOpenAI()
 
     async def get_one_description(image: str) -> str:
-        response = await client.chat.completions.create(
-            model="gpt-4-turbo",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": "Explain the contents of this image and how it is relevant to the prompt in two sentences.",
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": image,
+        try:
+            response = await client.chat.completions.create(
+                model="gpt-4-turbo",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Explain the contents of this image and how it is relevant to the prompt in two sentences.",
                             },
-                        },
-                    ],
-                }
-            ],
-            max_tokens=300,
-        )
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": image,
+                                },
+                            },
+                        ],
+                    }
+                ],
+                max_tokens=300,
+            )
 
-        return response.choices[0].message.content
+            return response.choices[0].message.content
+        except Exception as e:
+            return "Image failed to describe"
 
     image_descriptions = asyncio.run(
         asyncio.gather(*[get_one_description(image) for image in images])
@@ -91,8 +93,6 @@ async def get_images(topic, num_images):
         {"run_name": "Assistant"}
     )
 
-    topic = "Slide on stacks in data structures"
-
     response = await executor.ainvoke(
         {
             "input": topic,
@@ -121,7 +121,7 @@ async def get_images(topic, num_images):
         messages=[
             {
                 "role": "user",
-                "content": f"Images: {response['output']} \n\n Topic: {topic} \n\n From the images above, please select {num_images} images that you think are good for the given topic. \n\n {output_format}",
+                "content": f"Images: {response['output']} \n\n Topic: {topic} \n\n From the images above, please select {num_images} images that you think are good for the given topic. Only select images that end in a image extension such as .jpg, .png etc \n\n Make sure to only return {num_images} number of images. {output_format}",
             }
         ],
         max_tokens=2000,
@@ -129,4 +129,4 @@ async def get_images(topic, num_images):
 
     images = json.loads(images.choices[0].message.content)
 
-    return images
+    return images["images"]
