@@ -13,9 +13,12 @@
     "@gregcello/revealjs-react": "^0.5.1",
     "@types/reveal.js": "^5.0.3",
     "i": "^0.3.7",
+    "lucide-react": "^0.372.0",
     "next": "^14.2.2",
     "react": "^18",
     "react-dom": "^18",
+    "retell": "^1.1.1",
+    "retell-client-js-sdk": "^1.3.2",
     "sass": "^1.75.0"
     "react-resizable-panels": "^2.0.18",
     "react-reveal-slides": "bouzidanas/react-reveal-slides",

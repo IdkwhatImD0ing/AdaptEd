@@ -1,5 +1,5 @@
-import Voice from "./Voice";
-import NavBar from "./navBar/NavBar";
+import Voice from "../Voice";
+import NavBar from "../navBar/NavBar";
 export default function Home() {
   return (
     <main className="main">
