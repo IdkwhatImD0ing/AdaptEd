@@ -6,10 +6,11 @@ from langchain.tools import tool
 from typing import List, Dict, Any
 from openai import AsyncOpenAI
 import asyncio
-from nest_asyncio import apply
+
+# from nest_asyncio import apply
 import json
 
-apply()
+# apply()
 
 from dotenv import load_dotenv
 
@@ -61,9 +62,10 @@ def get_descriptions(prompt: str, images: List[str]) -> str:
         except Exception as e:
             return "Image failed to describe"
 
-    image_descriptions = asyncio.run(
-        asyncio.gather(*[get_one_description(image) for image in images])
-    )
+    async def run_get_descriptions():
+        return await asyncio.gather(*[get_one_description(image) for image in images])
+
+    image_descriptions = asyncio.run(run_get_descriptions())
 
     # Link image urls with descriptions
     image_descriptions = [

@@ -2,6 +2,7 @@ import logging
 import os
 
 import voice
+import generate_route
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi import HTTPException
@@ -13,6 +14,7 @@ load_dotenv()
 
 app = FastAPI()
 
+app.include_router(generate_route.router)
 app.include_router(voice.router)
 
 app.add_middleware(

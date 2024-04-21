@@ -3,14 +3,12 @@ import google.generativeai as genai
 import ast
 import os
 import random
-from nest_asyncio import apply
 from templates import templates
 import json
 from image_agent import get_images
 from youtube import get_data
 import asyncio
 
-apply()
 
 # Load environment variables from a .env file
 from dotenv import load_dotenv
@@ -207,7 +205,7 @@ async def get_lecture(result):
     return lecture
 
 
-def generate(topic):
+async def generate(topic):
     sources = wikipedia_tool.run(topic)
     model = generate_new_model()
     audio, video = get_data(topic)
@@ -223,10 +221,10 @@ def generate(topic):
     return lecture
 
 
-def generate_simple(topic):
+async def generate_simple(topic):
     sources = wikipedia_tool.run(topic)
     model = generate_new_model()
-    sources_to_lecture_simple(model, topic, sources)
+    result = sources_to_lecture_simple(model, topic, sources)
     if "```json" in result:
         # Get the JSON content from the result
         result = result.split("```json")[1]
@@ -234,5 +232,5 @@ def generate_simple(topic):
 
     result = json.loads(result)
 
-    lecture = asyncio.run(get_lecture(result))
+    lecture = await get_lecture(result)
     return lecture

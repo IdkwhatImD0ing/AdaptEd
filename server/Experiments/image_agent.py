@@ -6,10 +6,8 @@ from langchain.tools import tool
 from typing import List, Dict, Any
 from openai import AsyncOpenAI
 import asyncio
-from nest_asyncio import apply
 import json
 
-apply()
 
 from dotenv import load_dotenv
 
