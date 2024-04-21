@@ -214,7 +214,7 @@ async def get_lecture(result):
 def generate(topic):
     """
 
-    :param topic: 
+    :param topic:
 
     """
     sources = wikipedia_tool.run(topic)
@@ -235,7 +235,7 @@ def generate(topic):
 def generate_simple(topic):
     """
 
-    :param topic: 
+    :param topic:
 
     """
     sources = wikipedia_tool.run(topic)
