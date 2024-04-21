@@ -13,19 +13,35 @@ export default function page() {
   useEffect(() => {
     const generateLecture = async () => {
       try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const topic = decodeURIComponent(urlParams.get("topic") || "");
         const response = await fetch("http://localhost:8000/generate-simple", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ topic: "Artificial Intelligence" }),
+          body: JSON.stringify({ topic: topic }),
         });
 
         if (response.ok) {
           const lecture = await response.json();
           console.log("Generated lecture:", lecture);
+          localStorage.setItem("lecture", JSON.stringify(lecture));
           // Update the tasks state with the research tasks from the lecture
           setTasks(lecture.research_tasks);
+          // Store the lecture data in the user's account database via pymongo
+          const response2 = await fetch(
+            "http://localhost:8000/api/store-lecture",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(lecture),
+            }
+          );
+          console.log(response2); // Process your response further
+          window.location.href = "/lecture";
         } else {
           console.error("Error generating lecture:", response.statusText);
         }
@@ -37,36 +53,7 @@ export default function page() {
     generateLecture();
   }, []);
 
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      title: "Research Google",
-      url: "https://www.google.com/search?q=artificial+intelligence",
-      subtasks: [
-        "Extract relevant images from search results",
-        "Identify key concepts and definitions",
-      ],
-      status: "todo",
-    },
-    {
-      title: "Explore Wikipedia",
-      url: "https://en.wikipedia.org/wiki/Artificial_intelligence",
-      subtasks: [
-        "Read introduction and history sections",
-        "Follow links to related topics",
-      ],
-      status: "todo",
-    },
-    {
-      title: "Parse YouTube Video",
-      url: "https://www.youtube.com/watch?v=AIrKFHrGJx0",
-      subtasks: [
-        "Watch the video",
-        "Take notes on main points",
-        "Capture key screenshots",
-      ],
-      status: "todo",
-    },
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [currentTask, setCurrentTask] = useState<string | null>(
     "Research Google"
   );

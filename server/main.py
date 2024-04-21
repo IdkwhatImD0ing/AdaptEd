@@ -68,10 +68,10 @@ async def get_template(template_id: int):
         raise HTTPException(status_code=404, detail="Template not found")
     return template
 
-@app.post("/generate_lecture") 
+
+@app.post("/generate_lecture")
 async def generate_lecture(topic: str = Form(...)):
     """
     Generate a lecture based on the given topic.
-    """ 
-    """ 
-    return generate(topic)  
+    """
+    return generate(topic)

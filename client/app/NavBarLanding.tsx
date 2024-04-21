@@ -70,12 +70,17 @@ function NavBarLanding() {
       </nav>
       <div className="flex-row" style={{ gap: "22px" }}>
         {/* Log in */}
-        <div style={{ fontSize: "22px" }}>Log in</div>
+        <a href="/api/auth/login">
+          <div style={{ fontSize: "22px" }}>Log in</div>
+        </a>
         {/* Sign up */}
 
         <button
           className="primary"
           style={{ borderRadius: "100px", fontSize: "22px" }}
+          onClick={() => {
+            window.location.href = "/api/auth/signup";
+          }}
         >
           Sign up
         </button>
