@@ -28,11 +28,9 @@ class LlmClient:
         messages = []
         for utterance in transcript:
             if utterance["role"] == "agent":
-                messages.append(
-                    {"role": "assistant", "content": utterance["content"]})
+                messages.append({"role": "assistant", "content": utterance["content"]})
             else:
-                messages.append(
-                    {"role": "user", "content": utterance["content"]})
+                messages.append({"role": "user", "content": utterance["content"]})
         return messages
 
     def prepare_prompt(self, request: Request) -> list[ChatCompletionMessageParam]:
