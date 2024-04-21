@@ -11,19 +11,22 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",
     "i": "^0.3.7",
+    "lucide-react": "^0.372.0",
     "next": "^14.2.2",
     "react": "^18",
     "react-dom": "^18",
+    "retell": "^1.1.1",
+    "retell-client-js-sdk": "^1.3.2",
     "sass": "^1.75.0"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.2",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.2"
+    "typescript": "^5"
   }
 }
