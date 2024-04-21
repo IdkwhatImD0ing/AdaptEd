@@ -1,16 +1,16 @@
-from wikipedia_tool import wikipedia_tool
-from dotenv import load_dotenv
-import google.generativeai as genai
-import google.generativeai as genai
 import ast
+import asyncio
+import json
 import os
 import random
+
+import google.generativeai as genai
+from dotenv import load_dotenv
+from image_agent import get_images
 from nest_asyncio import apply
 from templates import templates
-import json
-from image_agent import get_images
+from wikipedia_tool import wikipedia_tool
 from youtube import get_data
-import asyncio
 
 apply()
 
