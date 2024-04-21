@@ -6,7 +6,9 @@ import { useContext, useRef } from "react";
 import { DeckContext } from "spectacle";
 import { title } from "process";
 import { RetellWebClient } from "retell-client-js-sdk";
-
+import NavBar from "./navBar/NavBar";
+import { WandSparkles, Sparkles } from "lucide-react";
+import NavBarLanding from "./NavBarLanding";
 export default function Home() {
   const testLecture: Lecture = {
     title: "Introduction to Red-Black Trees",
@@ -277,16 +279,7 @@ export default function Home() {
         <br />
         <a href="/api/auth/logout">Logout</a>
       </div>
-      <Voice
-        onFuncCallResult={handleFuncCallResult}
-        retellClientRef={retellClientRef}
-        funcCallSocketRef={funcCallSocketRef}
-        onDataSocketConnect={handleDataSocketConnect}
-      />
-      <div>
-        <h1>{testLecture.title}</h1>
-        <Slideshow lecture={testLecture} onSlideChange={handleSlideChange} />
-      </div>
+      <Voice />
       <h1 className="text-4xl font-bold">Learn anything</h1>
       <input type="text" placeholder="type a topic..." />
       <button type="submit">Submit form</button>

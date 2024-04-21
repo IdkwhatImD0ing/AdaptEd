@@ -1,5 +1,5 @@
 import "./globals.css";
-
+import "./global.sass";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { Inter } from "next/font/google";
 
