@@ -5,12 +5,12 @@ import os
 import random
 
 import google.generativeai as genai
-# Load environment variables from a .env file
 from dotenv import load_dotenv
 from image_agent import get_images
 from templates import templates
 from wikipedia_tool import wikipedia_tool
 from youtube import get_data
+# Load environment variables from a .env file
 
 load_dotenv()
 

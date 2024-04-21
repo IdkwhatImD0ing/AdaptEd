@@ -1,5 +1,7 @@
-from aggregate import generate, generate_simple
-from fastapi import APIRouter, Request
+from aggregate import generate
+from aggregate import generate_simple
+from fastapi import APIRouter
+from fastapi import Request
 
 router = APIRouter()
 
