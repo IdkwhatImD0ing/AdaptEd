@@ -6,7 +6,11 @@ function NavBar() {
   return (
     <div className="nav-contain">
       <img src="./AdaptED_logo.png" width={"140px"} />
-      <NavBarElement additionalClass='active' icon={<BarChartBig />} navBarSection="Home" />
+      <NavBarElement
+        additionalClass="active"
+        icon={<BarChartBig />}
+        navBarSection="Home"
+      />
       <NavBarElement icon={<WandSparkles />} navBarSection="Create" />
       <NavBarElement icon={<CircleUserRound />} navBarSection="Profile" />
     </div>

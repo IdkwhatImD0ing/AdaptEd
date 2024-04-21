@@ -1,5 +1,7 @@
 "use client";
 
+import "./global.sass";
+
 import { WandSparkles, Sparkles } from "lucide-react";
 import NavBarLanding from "./NavBarLanding";
 export default function Home() {

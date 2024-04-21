@@ -1,3 +1,5 @@
+import "../global.sass";
+
 import Voice from "../components/Voice";
 import NavBar from "../navBar/NavBar";
 import { Sparkles } from "lucide-react";
