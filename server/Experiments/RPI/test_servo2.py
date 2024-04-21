@@ -21,7 +21,7 @@ try:
             break
 
         # Display the frame using OpenCV
-        cv2.imshow('Camera', frame)
+        cv2.imshow("Camera", frame)
         cv2.waitKey(1)  # Wait for 1 ms before moving on in the loop
 
         # Uncomment and use the following servo control as needed
