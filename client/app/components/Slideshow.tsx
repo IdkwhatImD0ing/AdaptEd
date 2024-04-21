@@ -34,147 +34,180 @@ export function shutdownSlideshow() {
   }
 }
 
-export default function Slideshow(props: { lecture: Lecture }) {
+const theme = {
+  colors: {
+    primary: "black",
+    secondary: "purple",
+    tertiary: "white",
+  },
+  backdropStyle: {
+    backgroundColor: "white",
+  },
+};
+
+export default function Slideshow(props: {
+  lecture: Lecture;
+  onSlideChange: (slideIndex: number) => void;
+}) {
   return (
-    <Deck template={<DeckControls />}>
+    <Deck
+      theme={theme}
+      template={<DeckControls onSlideChange={props.onSlideChange} />}
+    >
       {props.lecture.slides.map((slide, index) => (
         <React.Fragment key={index}>
-          {slide.template_id === 1 && (
+          {slide.template_id === 0 && (
             <SlideLayout.TwoColumn
               key={index}
-              left={<Heading>{slide.title}</Heading>}
+              left={
+                <>
+                  <Heading>{slide.title}</Heading>
+                  {slide.texts?.slice(0, 3).map((text, index) => (
+                    <Text key={index}>{text}</Text>
+                  ))}
+                </>
+              }
               right={
                 slide.images.length > 0 &&
-                slide.images.map((image, index) => (
-                  <Image
-                    key={index}
-                    src={image.source}
-                    alt={image.description}
-                    width={500}
-                    height={300}
-                  />
-                ))
+                slide.images
+                  .slice(0, 3)
+                  .map((image, index) => (
+                    <Image
+                      key={index}
+                      src={image.src}
+                      alt={image.description}
+                    />
+                  ))
               }
             />
           )}
-          {slide.template_id === 2 && (
+          {slide.template_id === 1 && (
             <SlideLayout.TwoColumn
               key={index}
               left={
                 slide.images.length > 0 &&
-                slide.images.map((image, index) => (
-                  <Image
-                    key={index}
-                    src={image.source}
-                    alt={image.description}
-                    width={500}
-                    height={300}
-                  />
-                ))
+                slide.images
+                  .slice(0, 3)
+                  .map((image, index) => (
+                    <Image
+                      key={index}
+                      src={image.src}
+                      alt={image.description}
+                    />
+                  ))
               }
-              right={<Heading>{slide.title}</Heading>}
+              right={
+                <>
+                  <Heading>{slide.title}</Heading>
+                  {slide.texts?.slice(0, 3).map((text, index) => (
+                    <Text key={index}>{text}</Text>
+                  ))}
+                </>
+              }
             />
           )}
-          {slide.template_id === 3 && (
+          {slide.template_id === 2 && (
             <SlideLayout.Center key={index}>
               <Heading>{slide.title}</Heading>
-              {/* {slide.subtitle && <Heading as="h2">{slide.subtitle}</Heading>} */}
-              {slide.texts.map((text, index) => (
+              {slide.texts?.slice(0, 3).map((text, index) => (
                 <Text key={index}>{text}</Text>
               ))}
               {slide.images.length > 0 &&
-                slide.images.map((image, index) => (
-                  <Image
-                    key={index}
-                    src={image.source}
-                    alt={image.description}
-                    width={500}
-                    height={300}
-                  />
-                ))}
+                slide.images
+                  .slice(0, 3)
+                  .map((image, index) => (
+                    <Image
+                      key={index}
+                      src={image.src}
+                      alt={image.description}
+                    />
+                  ))}
             </SlideLayout.Center>
           )}
-          {slide.template_id === 4 && (
+          {slide.template_id === 3 && (
             <SlideLayout.List
               key={index}
               title={slide.title}
-              items={slide.texts}
+              items={slide.texts?.slice(0, 3) || []}
             />
           )}
-          {slide.template_id === 5 && (
+          {slide.template_id === 4 && (
             <SlideLayout.Section key={index}>
               <Heading>{slide.title}</Heading>
-              {/* {slide.subtitle && <Heading as="h2">{slide.subtitle}</Heading>} */}
-              {slide.texts.map((text, index) => (
+              {slide.texts?.slice(0, 3).map((text, index) => (
                 <Text key={index}>{text}</Text>
               ))}
             </SlideLayout.Section>
           )}
-          {slide.template_id === 6 && (
+          {slide.template_id === 5 && (
             <SlideLayout.Statement key={index}>
               <Heading>{slide.title}</Heading>
-              {/* {slide.subtitle && <Heading as="h2">{slide.subtitle}</Heading>} */}
-              {slide.texts.map((text, index) => (
+              {slide.texts?.slice(0, 3).map((text, index) => (
                 <Text key={index}>{text}</Text>
               ))}
             </SlideLayout.Statement>
           )}
-          {slide.template_id === 7 && (
+          {slide.template_id === 6 && (
             <SlideLayout.BigFact key={index}>
               <Heading>{slide.title}</Heading>
-              {/* {slide.subtitle && <Heading as="h2">{slide.subtitle}</Heading>} */}
-              {slide.texts.map((text, index) => (
+              {slide.texts?.slice(0, 3).map((text, index) => (
                 <Text key={index}>{text}</Text>
               ))}
             </SlideLayout.BigFact>
           )}
-          {slide.template_id === 8 && (
-            <SlideLayout.Quote key={index} attribution={slide.texts[1]}>
+          {slide.template_id === 7 && (
+            <SlideLayout.Quote key={index} attribution={""}>
               <Heading>{slide.title}</Heading>
-              {/* {slide.subtitle && <Heading as="h2">{slide.subtitle}</Heading>} */}
-              {slide.texts[0]}
+              {slide.texts?.slice(0, 3).map((text, index) => (
+                <Text key={index}>{text}</Text>
+              ))}
             </SlideLayout.Quote>
           )}
-          {slide.template_id === 9 && (
+          {slide.template_id === 8 && slide.images[0] && (
             <SlideLayout.HorizontalImage
               key={index}
-              src={slide.images[0].source}
+              src={slide.images[0].src}
               alt={slide.images[0].description}
               title={slide.title}
-              description={slide.subtitle}
             />
           )}
-          {slide.template_id === 10 && (
+          {slide.template_id === 9 && slide.images[0] && (
             <SlideLayout.VerticalImage
               key={index}
-              src={slide.images[0].source}
+              src={slide.images[0].src}
               alt={slide.images[0].description}
-              listItems={slide.texts}
+              listItems={slide.texts?.slice(0, 3) || []}
               title={slide.title}
               titleProps={{ color: "red" }}
             />
           )}
-          {slide.template_id === 11 && (
+          {slide.template_id === 10 && (
             <SlideLayout.ThreeUpImage
               key={index}
-              primary={{
-                src: slide.images[0].source,
-                alt: slide.images[0].description,
-              }}
-              top={{
-                src: slide.images[1].source,
-                alt: slide.images[1].description,
-              }}
-              bottom={{
-                src: slide.images[2].source,
-                alt: slide.images[2].description,
-              }}
+              primary={
+                slide.images[0] && {
+                  src: slide.images[0].src,
+                  alt: slide.images[0].description,
+                }
+              }
+              top={
+                slide.images[1] && {
+                  src: slide.images[1].src,
+                  alt: slide.images[1].description,
+                }
+              }
+              bottom={
+                slide.images[2] && {
+                  src: slide.images[2].src,
+                  alt: slide.images[2].description,
+                }
+              }
             />
           )}
-          {slide.template_id === 12 && (
+          {slide.template_id === 11 && slide.images[0] && (
             <SlideLayout.FullBleedImage
               key={index}
-              src={slide.images[0].source}
+              src={slide.images[0].src}
               alt={slide.images[0].description}
             />
           )}

@@ -22,12 +22,14 @@ type MessageTranscript = {
 
 export default function Voice(props: {
   onFuncCallResult: (result: any) => void;
+  onDataSocketConnect: () => void;
+  retellClientRef: React.MutableRefObject<RetellWebClient | undefined>;
+  funcCallSocketRef: React.MutableRefObject<WebSocket | undefined>;
 }) {
   const [isCalling, setIsCalling] = useState(false);
   const [userSpeaking, setUserSpeaking] = useState(false);
 
-  const retellClientRef = useRef<RetellWebClient>();
-  const funcCallSocketRef = useRef<WebSocket>();
+  const { retellClientRef, funcCallSocketRef } = props;
 
   useEffect(() => {
     // If SDK already initialized
@@ -72,7 +74,7 @@ export default function Voice(props: {
     );
 
     // Start conversation on mount
-    toggleConversation();
+    // toggleConversation();
 
     return () => {
       // Cleanup event listeners when the component is unmounted
@@ -95,6 +97,7 @@ export default function Voice(props: {
 
     funcCallSocketRef.current.onopen = () => {
       console.log("Function call websocket connected");
+      props.onDataSocketConnect();
     };
 
     funcCallSocketRef.current.onmessage = (event) => {
@@ -162,5 +165,11 @@ export default function Voice(props: {
     }
   }
 
-  return <></>;
+  return (
+    <div>
+      {!isCalling && (
+        <button onClick={toggleConversation}>Start Conversation</button>
+      )}
+    </div>
+  );
 }

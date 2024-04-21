@@ -1,14 +1,15 @@
 type Image = {
-    source: string;
+    src: string;
     description: string;
   };
 
 type Slide = {
     title: string;
-    subtitle: string;
     template_id: number;
     images: Image[];
-    texts: string[];
+    texts?: string[];
+    speaker_notes?: string;
+    image?: string;
 };
 
 type Lecture = {
