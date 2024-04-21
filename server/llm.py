@@ -9,6 +9,7 @@ from langchain.schema import AIMessage
 from langchain.schema import HumanMessage
 from langchain.schema import SystemMessage
 from langchain.tools.base import StructuredTool
+
 # from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 # from langchain.tools import Tool
 
@@ -79,6 +80,7 @@ class LlmClient:
 
         :param request: Request:
         :param request: Request:
+        :param request: Request:
 
         """
         prompt = [
@@ -102,6 +104,7 @@ class LlmClient:
     def draft_response(self, request: Request):
         """
 
+        :param request: Request:
         :param request: Request:
         :param request: Request:
 
