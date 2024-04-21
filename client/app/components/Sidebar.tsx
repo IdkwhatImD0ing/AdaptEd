@@ -3,7 +3,7 @@ import React from "react";
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="flex flex-col w-64 h-screen p-4 bg-gray-800 text-white">
+    <div className="flex flex-col w-full h-screen p-4 bg-gray-800 text-white">
       <h2 className="text-2xl font-bold mb-4">Chat Log</h2>
       <div className="flex-1 overflow-y-auto">
         {/* Chat messages will be displayed here */}
