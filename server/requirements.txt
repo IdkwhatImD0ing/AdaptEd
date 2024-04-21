@@ -1,5 +1,7 @@
 email-validator==2.1.1
 fastapi==0.110.2
+google-generativeai==0.5.2
+grpcio-status==1.62.2
 httptools==0.6.1
 ipykernel==6.29.0
 itsdangerous==2.2.0
@@ -11,10 +13,12 @@ pip-chill==1.0.3
 pydantic-extra-types==2.6.0
 pydantic-settings==2.2.1
 pymongo==3.11.0
+pysocks==1.7.1
 python-multipart==0.0.9
 pytube==15.0.0
 pyyaml==6.0.1
 retell==0.5.1
+trio-websocket==0.11.1
 ujson==5.9.0
 uvicorn==0.29.0
 watchfiles==0.21.0
