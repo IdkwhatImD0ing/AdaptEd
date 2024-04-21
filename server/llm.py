@@ -101,6 +101,10 @@ class LlmClient:
         """
         print(request)
 
+        if request["interaction_type"] == "reminder_required":
+            print("SKIPPING")
+            return
+
         history = self.prepare_prompt(request)
 
         func_call = {}
@@ -139,7 +143,7 @@ class LlmClient:
             {"input": request["transcript"][-1]["content"], "chat_history": history}
         )
 
-        print(result)
+        # print(result)
 
         # if result.startswith("Action:"):
         #     action_name = result.split("Action: ")[1].split("(")[0]

@@ -267,7 +267,7 @@ export default function Home() {
       if (slide.speaker_notes) {
         funcCallSocketRef.current?.send(slide.speaker_notes);
       }
-    }, 3000);
+    }, 5000);
   };
 
   return (

@@ -26,6 +26,7 @@ data_websockets = {}
 retell_websockets = {}
 
 response_id = 0
+interrupt_id = 0
 
 
 @router.post("/register-call-on-your-server")
@@ -119,6 +120,7 @@ async def data_websocket_handler(websocket: WebSocket, call_id: str):
     print(f"Data websocket connected for {call_id}")
 
     global response_id
+    global interrupt_id
 
     try:
         while True:
@@ -128,18 +130,18 @@ async def data_websocket_handler(websocket: WebSocket, call_id: str):
             if call_id in retell_websockets:
                 text = {
                     "response_type": "agent_interrupt",
-                    "interrupt_id": 123,
+                    "interrupt_id": interrupt_id,
                     "content": message,
                     "content_complete": True,
                     "end_call": False,
+                    "no_interruption_allowed": False,
                 }
 
                 print(text)
 
-                response_id += 1
+                interrupt_id += 1
 
-                retell_websocket = retell_websockets[call_id]
-                await retell_websocket.send_text(json.dumps(text))
+                await retell_websockets[call_id].send_text(json.dumps(text))
             else:
                 print(
                     "\033[91mError: Retell websocket not connected for call ID: "
