@@ -1,9 +1,11 @@
-from gpiozero import Servo
 import time
+
 import cv2
+from gpiozero import Servo
 
 # Initialize the camera
-camera = cv2.VideoCapture(0)  # 0 is usually the default value for a single camera setup
+# 0 is usually the default value for a single camera setup
+camera = cv2.VideoCapture(0)
 
 # Setup for the servos
 mouth_servo1 = Servo(12)
@@ -18,9 +20,9 @@ try:
         if not ret:
             print("Failed to grab frame")
             break
-        
+
         # Display the frame using OpenCV
-        cv2.imshow('Camera', frame)
+        cv2.imshow("Camera", frame)
         cv2.waitKey(1)  # Wait for 1 ms before moving on in the loop
 
         # Uncomment and use the following servo control as needed
