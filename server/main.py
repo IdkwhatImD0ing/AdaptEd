@@ -1,13 +1,17 @@
 import logging
 import os
+from typing import Optional
 
 import voice
 import generate_route
+from aggregate import generate
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi import Request
+from fastapi import WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from manager import ConnectionManager
 from mongodb_manager import MongoDBManager
 
 load_dotenv()
@@ -26,8 +30,10 @@ app.add_middleware(
 )
 
 # Configuration for your MongoDB instance
-
 mongo_client = MongoDBManager(os.getenv("MONGO_URI"), os.getenv("DB_NAME"))
+
+# Setup the WebSocket manager
+manager = ConnectionManager()
 
 
 @app.middleware("http")
@@ -60,3 +66,11 @@ async def get_template(template_id: int):
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
     return template
+
+
+@app.post("/lectures")
+async def generate_lecture(topic: str):
+    """
+    Generate a lecture based on the given topic.
+    """
+    return generate(topic)
