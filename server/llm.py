@@ -55,7 +55,7 @@ class LlmClient:
     def convert_transcript_to_messages(self, transcript):
         """
 
-        :param transcript:
+        :param transcript: 
 
         """
         messages = []
@@ -72,6 +72,7 @@ class LlmClient:
         """
 
         :param request: Request:
+        :param request: Request: 
 
         """
         prompt = [
@@ -96,6 +97,7 @@ class LlmClient:
         """
 
         :param request: Request:
+        :param request: Request: 
 
         """
         print(request)
