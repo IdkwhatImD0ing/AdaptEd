@@ -77,9 +77,9 @@ def extract_frame_from_video(video_file_path):
     vidcap.release()
     print(f"Completed video frame extraction!\n\nExtracted: {frame_count} frames")
 
-def get_video(url: str, extract: bool = True):
+def get_video(url: str):
     # Download video
-    video_file_path, audio_file_path = download_youtube_video(url, DOWNLOAD_DIRECTORY)
+    video_file_path, audio_file_path = download_youtube_video(url, "experiments/content/videos")
     # Extract frames
     extract_frame_from_video(video_file_path)
     return video_file_path, audio_file_path
