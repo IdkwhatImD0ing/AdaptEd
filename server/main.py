@@ -1,17 +1,17 @@
 import logging
 import os
+from typing import Optional
 
 import voice
+from aggregate import generate
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi import Request
 from fastapi import WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from mongodb_manager import MongoDBManager
 from manager import ConnectionManager
-from typing import Optional
-from aggregate import generate
+from mongodb_manager import MongoDBManager
 
 load_dotenv()
 
@@ -59,17 +59,16 @@ async def get_lecture(email: str, title: str):
 async def get_template(template_id: int):
     """
     Endpoint to retrieve a slide template based on its ID.
-    """ 
+    """
     template = mongo_client.get_template(template_id)
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
     return template
 
-@app.post("/lectures") 
+
+@app.post("/lectures")
 async def generate_lecture(topic: str):
     """
     Generate a lecture based on the given topic.
-    """ 
+    """
     return generate(topic)
-
-            
