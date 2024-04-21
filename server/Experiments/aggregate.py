@@ -74,14 +74,8 @@ def sources_to_lecture(model, original_prompt, sources, audio, video):
     :rtype: str
 
     """
-    prompt = (
-        "Available templates: \n\n"
-        + str(templates)
-        + "\n\n"
-        + "Original Topic: "
-        + original_prompt
-        + "\n\n"
-        + """
+    prompt = ("Available templates: \n\n" + str(templates) + "\n\n" +
+              "Original Topic: " + original_prompt + "\n\n" + """
 You are an advanced assistant that is in charge of aggregating multiple sources of information into a lecture based on a specific prompt.
 Output 8 different slides on the topic given above using the sources provided as well as the given templates.
 Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting.
@@ -107,11 +101,9 @@ Make sure the response is in the following format, only output the keys and valu
         }
     ]
 }
-"""
-    )
+""")
     lecture = model.generate_content(
-        video
-        + [
+        video + [
             audio,
             sources + prompt,
         ],
@@ -131,14 +123,8 @@ def sources_to_lecture_simple(model, original_prompt, sources):
     :rtype: str
 
     """
-    prompt = (
-        "Available templates: \n\n"
-        + str(templates)
-        + "\n\n"
-        + "Original Topic: "
-        + original_prompt
-        + "\n\n"
-        + """
+    prompt = ("Available templates: \n\n" + str(templates) + "\n\n" +
+              "Original Topic: " + original_prompt + "\n\n" + """
 You are an advanced assistant that is in charge of aggregating multiple sources of information into a lecture based on a specific prompt.
 Output 8 different slides on the topic given above using the sources provided as well as the given templates.
 Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting.
@@ -164,8 +150,7 @@ Make sure the response is in the following format, only output the keys and valu
         }
     ]
 }
-"""
-    )
+""")
     lecture = model.generate_content(
         sources + prompt,
         request_options={"timeout": 1000},
@@ -178,7 +163,9 @@ async def get_lecture(result):
     new_slides = []
 
     for slide in result["slides"]:
-        template = [t for t in templates if t["template_id"] == slide["template_id"]][0]
+        template = [
+            t for t in templates if t["template_id"] == slide["template_id"]
+        ][0]
         num_images = template["num_images"]
 
         if num_images == 0:
@@ -198,7 +185,9 @@ async def get_lecture(result):
     # Iterate over the slides that require images
     image_index = 0
     for slide in result["slides"]:
-        template = [t for t in templates if t["template_id"] == slide["template_id"]][0]
+        template = [
+            t for t in templates if t["template_id"] == slide["template_id"]
+        ][0]
         num_images = template["num_images"]
         if num_images != 0:
             new_slides.append({**slide, "images": images_results[image_index]})
@@ -221,22 +210,28 @@ def generate(topic):
     # Log the research tasks and subtasks
     research_tasks = [
         {
-            "title": "Wikipedia Research",
-            "url": wikipedia_tool.url,
+            "title":
+            "Wikipedia Research",
+            "url":
+            wikipedia_tool.url,
             "subtasks": [
                 "Extract relevant sections",
                 "Identify key concepts and definitions",
             ],
-            "status": "done",
+            "status":
+            "done",
         },
         {
-            "title": "YouTube Video Analysis",
-            "url": video["url"],
+            "title":
+            "YouTube Video Analysis",
+            "url":
+            video["url"],
             "subtasks": [
                 "Extract audio transcript",
                 "Identify key points and examples",
             ],
-            "status": "done",
+            "status":
+            "done",
         },
     ]
 
@@ -266,17 +261,18 @@ def generate_simple(topic):
     model = generate_new_model()
 
     # Log the research task and subtasks
-    research_tasks = [
-        {
-            "title": "Wikipedia Research",
-            "url": wikipedia_tool.url,
-            "subtasks": [
-                "Extract relevant sections",
-                "Identify key concepts and definitions",
-            ],
-            "status": "done",
-        }
-    ]
+    research_tasks = [{
+        "title":
+        "Wikipedia Research",
+        "url":
+        wikipedia_tool.url,
+        "subtasks": [
+            "Extract relevant sections",
+            "Identify key concepts and definitions",
+        ],
+        "status":
+        "done",
+    }]
 
     result = sources_to_lecture_simple(model, topic, sources)
     if "```json" in result:

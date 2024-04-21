@@ -42,23 +42,24 @@ def get_descriptions(prompt: str, images: List[str]) -> str:
         try:
             response = await client.chat.completions.create(
                 model="gpt-4-turbo",
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": "Explain the contents of this image and how it is relevant to the prompt in two sentences.",
+                messages=[{
+                    "role":
+                    "user",
+                    "content": [
+                        {
+                            "type":
+                            "text",
+                            "text":
+                            "Explain the contents of this image and how it is relevant to the prompt in two sentences.",
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": image,
                             },
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": image,
-                                },
-                            },
-                        ],
-                    }
-                ],
+                        },
+                    ],
+                }],
                 max_tokens=300,
             )
 
@@ -67,8 +68,7 @@ def get_descriptions(prompt: str, images: List[str]) -> str:
             return "Image failed to describe"
 
     image_descriptions = asyncio.run(
-        asyncio.gather(*[get_one_description(image) for image in images])
-    )
+        asyncio.gather(*[get_one_description(image) for image in images]))
 
     # Link image urls with descriptions
     image_descriptions = [
@@ -95,14 +95,11 @@ async def get_images(topic, num_images):
 
     agent = create_tool_calling_agent(llm, tools, prompt)
     executor = AgentExecutor(agent=agent, tools=tools).with_config(
-        {"run_name": "Assistant"}
-    )
+        {"run_name": "Assistant"})
 
-    response = await executor.ainvoke(
-        {
-            "input": topic,
-        }
-    )
+    response = await executor.ainvoke({
+        "input": topic,
+    })
 
     output_format = """
     Return in the following json format:
@@ -123,12 +120,12 @@ async def get_images(topic, num_images):
     images = await client.chat.completions.create(
         model="gpt-4-turbo",
         response_format={"type": "json_object"},
-        messages=[
-            {
-                "role": "user",
-                "content": f"Images: {response['output']} \n\n Topic: {topic} \n\n From the images above, please select {num_images} images that you think are good for the given topic. Only select images that end in a image extension such as .jpg, .png etc \n\n Make sure to only return {num_images} number of images. {output_format}",
-            }
-        ],
+        messages=[{
+            "role":
+            "user",
+            "content":
+            f"Images: {response['output']} \n\n Topic: {topic} \n\n From the images above, please select {num_images} images that you think are good for the given topic. Only select images that end in a image extension such as .jpg, .png etc \n\n Make sure to only return {num_images} number of images. {output_format}",
+        }],
         max_tokens=2000,
     )
 

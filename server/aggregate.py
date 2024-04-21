@@ -14,7 +14,6 @@ from youtube import get_data
 
 load_dotenv()
 
-
 # Parse API keys stored in an environment variable and convert them into a Python list
 GEMINI_API_KEYS = os.environ.get("GEMINI_API_KEYS")
 KEY_LIST = ast.literal_eval(GEMINI_API_KEYS)
@@ -26,7 +25,6 @@ random.shuffle(KEY_LIST)
 current_api_key_index = 0
 
 genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
-
 
 # List to store historical messages for reference or logging
 messages = []
@@ -75,14 +73,8 @@ def sources_to_lecture(model, original_prompt, sources, audio, video):
     :rtype: str
 
     """
-    prompt = (
-        "Available templates: \n\n"
-        + str(templates)
-        + "\n\n"
-        + "Original Topic: "
-        + original_prompt
-        + "\n\n"
-        + """
+    prompt = ("Available templates: \n\n" + str(templates) + "\n\n" +
+              "Original Topic: " + original_prompt + "\n\n" + """
 You are an advanced assistant that is in charge of aggregating multiple sources of information into a lecture based on a specific prompt.
 Output 8 different slides on the topic given above using the sources provided as well as the given templates.
 Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting.
@@ -108,11 +100,9 @@ Make sure the response is in the following format, only output the keys and valu
         }
     ]
 }
-"""
-    )
+""")
     lecture = model.generate_content(
-        video
-        + [
+        video + [
             audio,
             sources + prompt,
         ],
@@ -132,14 +122,8 @@ def sources_to_lecture_simple(model, original_prompt, sources):
     :rtype: str
 
     """
-    prompt = (
-        "Available templates: \n\n"
-        + str(templates)
-        + "\n\n"
-        + "Original Topic: "
-        + original_prompt
-        + "\n\n"
-        + """
+    prompt = ("Available templates: \n\n" + str(templates) + "\n\n" +
+              "Original Topic: " + original_prompt + "\n\n" + """
 You are an advanced assistant that is in charge of aggregating multiple sources of information into a lecture based on a specific prompt.
 Output 8 different slides on the topic given above using the sources provided as well as the given templates.
 Make sure the slides flow logically and are easy to understand. Use the correct templates for the content you are presenting.
@@ -165,8 +149,7 @@ Make sure the response is in the following format, only output the keys and valu
         }
     ]
 }
-"""
-    )
+""")
     lecture = model.generate_content(
         sources + prompt,
         request_options={"timeout": 1000},
@@ -179,7 +162,9 @@ async def get_lecture(result):
     new_slides = []
 
     for slide in result["slides"]:
-        template = [t for t in templates if t["template_id"] == slide["template_id"]][0]
+        template = [
+            t for t in templates if t["template_id"] == slide["template_id"]
+        ][0]
         num_images = template["num_images"]
 
         if num_images == 0:
@@ -199,7 +184,9 @@ async def get_lecture(result):
     # Iterate over the slides that require images
     image_index = 0
     for slide in result["slides"]:
-        template = [t for t in templates if t["template_id"] == slide["template_id"]][0]
+        template = [
+            t for t in templates if t["template_id"] == slide["template_id"]
+        ][0]
         num_images = template["num_images"]
         if num_images != 0:
             new_slides.append({**slide, "images": images_results[image_index]})
