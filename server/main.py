@@ -59,17 +59,16 @@ async def get_lecture(email: str, title: str):
 async def get_template(template_id: int):
     """
     Endpoint to retrieve a slide template based on its ID.
-    """ 
+    """
     template = mongo_client.get_template(template_id)
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
     return template
 
-@app.post("/lectures") 
+
+@app.post("/lectures")
 async def generate_lecture(topic: str):
     """
     Generate a lecture based on the given topic.
-    """ 
+    """
     return generate(topic)
-
-            
