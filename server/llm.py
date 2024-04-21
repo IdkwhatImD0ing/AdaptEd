@@ -47,14 +47,13 @@ class LlmClient:
         for message in transcript_messages:
             prompt.append(message)
 
-        # # Commented out to skip interaction reminders
-        # if request["interaction_type"] == "reminder_required":
-        #     prompt.append(
-        #         {
-        #             "role": "user",
-        #             "content": "(Now the user has not responded in a while, you would say:)",
-        #         }
-        #     )
+        if request["interaction_type"] == "reminder_required":
+            prompt.append(
+                {
+                    "role": "user",
+                    "content": "(Now the user has not responded in a while, you would say:)",
+                }
+            )
         return prompt
 
     # Step 1: Prepare the function calling definition to the prompt
@@ -76,6 +75,8 @@ class LlmClient:
         return functions, client_side_funcs, server_side_funcs
 
     def draft_response(self, request: Request):
+        print(request)
+
         prompt = self.prepare_prompt(request)
         func_call = {}
         func_arguments = ""
@@ -83,7 +84,7 @@ class LlmClient:
         tools, client_side_funcs, server_side_funcs = self.prepare_functions()
 
         stream = self.client.chat.completions.create(
-            model="gpt-3.5-turbo-1106",
+            model="gpt-3.5-turbo",
             messages=prompt,
             stream=True,
             # Step 2: Add the function into your request
@@ -111,8 +112,9 @@ class LlmClient:
 
             # Parse transcripts
             if chunk.choices[0].delta.content:
+                print(chunk.choices[0].delta.content)
                 yield {
-                    "response_id": request.response_id,
+                    "response_id": request["response_id"],
                     "content": chunk.choices[0].delta.content,
                     "content_complete": False,
                     "end_call": False,
@@ -136,7 +138,7 @@ class LlmClient:
         else:
             # No functions, complete response
             yield {
-                "response_id": request.response_id,
+                "response_id": request["response_id"],
                 "content": "",
                 "content_complete": True,
                 "end_call": False,
