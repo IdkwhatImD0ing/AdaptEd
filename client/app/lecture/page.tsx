@@ -257,8 +257,9 @@ function page() {
   const handleSlideChange = (slideIndex: number) => {
     console.log("Current slide number:", slideIndex);
     const slide = testLecture.slides[slideIndex];
-    if (slide.speaker_notes) {
-      funcCallSocket?.send(slide.speaker_notes);
+    const speaker_notes = slide.speaker_notes || slide.title;
+    if (speaker_notes) {
+      funcCallSocket?.send(speaker_notes);
     }
   };
 
@@ -268,8 +269,9 @@ function page() {
       const slide_number = getSlideIndex();
       const slide = testLecture.slides[slide_number];
       console.log("CONVERSATION STARTED", slide);
-      if (slide.speaker_notes) {
-        funcCallSocket?.send(slide.speaker_notes);
+      const speaker_notes = slide.speaker_notes || slide.title;
+      if (speaker_notes) {
+        funcCallSocket?.send(speaker_notes);
       }
     }, 5000);
   };
@@ -279,7 +281,8 @@ function page() {
     const lastMessage = update.transcript[update.transcript.length - 1];
 
     const slide_number = getSlideIndex();
-    const speaker_notes = testLecture.slides[slide_number].speaker_notes;
+    const slide = testLecture.slides[slide_number];
+    const speaker_notes = slide.speaker_notes || slide.title;
 
     if (lastMessage.content.includes(speaker_notes!)) {
       // If the slide is not the last one, skip to the next slide
@@ -294,13 +297,13 @@ function page() {
   return (
     <main className="flex flex-col h-full w-full">
       <PanelGroup direction="vertical">
-        <Panel defaultSize={95}>
+        <Panel defaultSize={100}>
           <PanelGroup direction="horizontal">
             <Panel minSize={25} defaultSize={75}>
               <div className="flex flex-col items-center">
                 <h1 className="text-2xl font-bold py-4">{testLecture.title}</h1>
-                <div className="w-full h-fit relative">
-                  <div className="absolute z-10 top-0 left-0 w-full h-full bg-white/75 flex items-center justify-center">
+                <div className="w-full h-min relative flex">
+                  <div className="absolute z-20 h-full top-0 left-0 w-full flex items-center justify-center">
                     <Voice
                       onFuncCallResult={handleFuncCallResult}
                       onDataSocketConnect={handleDataSocketConnect}
@@ -311,6 +314,9 @@ function page() {
                       onUpdate={handleUpdate}
                     />
                   </div>
+                  {!funcCallSocket && (
+                    <div className="absolute z-10 h-full top-0 left-0 w-full bg-white/75"></div>
+                  )}
                   <Slideshow
                     lecture={testLecture}
                     onSlideChange={handleSlideChange}
@@ -328,7 +334,7 @@ function page() {
           </PanelGroup>
         </Panel>
         <PanelResizeHandle />
-        <Panel collapsible={true} defaultSize={5}>
+        <Panel collapsible={true} defaultSize={0}>
           <h1></h1>
         </Panel>
       </PanelGroup>
