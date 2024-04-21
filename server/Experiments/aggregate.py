@@ -71,8 +71,8 @@ def sources_to_lecture(model, original_prompt, sources, audio, video):
     :type sources: list
     :param model: param original_prompt:
     :param audio: param video:
-    :param original_prompt:
-    :param video:
+    :param original_prompt: param video:
+    :param video: 
     :returns: A single lecture template combining all the source content.
     :rtype: str
 
@@ -129,7 +129,7 @@ def sources_to_lecture_simple(model, original_prompt, sources):
     :param sources: A list of sources, each containing a 'content' key with the source content.
     :type sources: list
     :param model: param original_prompt:
-    :param original_prompt:
+    :param original_prompt: returns: A single lecture template combining all the source content.
     :returns: A single lecture template combining all the source content.
     :rtype: str
 
@@ -214,7 +214,7 @@ async def get_lecture(result):
 def generate(topic):
     """
 
-    :param topic:
+    :param topic: 
 
     """
     sources = wikipedia_tool.run(topic)
@@ -235,7 +235,7 @@ def generate(topic):
 def generate_simple(topic):
     """
 
-    :param topic:
+    :param topic: 
 
     """
     sources = wikipedia_tool.run(topic)
