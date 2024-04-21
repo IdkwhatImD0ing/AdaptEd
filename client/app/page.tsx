@@ -1,22 +1,23 @@
 import Image from "next/image";
 import Voice from "./Voice";
 import NavBar from "./navBar/NavBar";
+import { WandSparkles, Sparkles } from "lucide-react";
 export default function Home() {
   return (
-    <main className="main">
-   
-        <NavBar />
-  
-      <div className="main-page">
-        <a href="/api/auth/login">Login</a>
-        <br />
-        <a href="/api/auth/logout">Logout</a>
-
-        <Voice />
-        <h1 className="text-4xl font-bold">Teach me</h1>
-        <input type="text" placeholder="name a topic" className="large-input" />
-        <button type="submit">Make magic</button>
+    <main className="hero">
+      <div className="tag">
+        <WandSparkles />
+        conversational learning
       </div>
+      <h1 className="title">
+        Learn through conversations.
+        <br />
+        Not textbooks.
+      </h1>
+      <button className="primary">
+        {" "}
+        <Sparkles /> Make magic
+      </button>
     </main>
   );
 }

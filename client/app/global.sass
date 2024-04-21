@@ -3,6 +3,7 @@
 $bg: #0E0E0F
 $main: #1B1B1E
 $text-color: #FFF
+$sec-text-color: #1B1B1E
 $prim: #9F03FE
 $hover-prim: #8200D1
 $hover-sec: darkgrey 
@@ -16,7 +17,6 @@ $gradient: linear-gradient(to right, rgba(117, 247, 255, 1), rgba(135, 106, 250,
 
 
 $p-color: #646464
-$input-color: #A5A5A5
 
 // layout
 $small-border: 12px
@@ -127,7 +127,7 @@ section,
 //* reusable components
 //* regular button
 button  
-  @include grid 
+  @include flex-row
   cursor: pointer 
   padding: 12px 18px 
   white-space: nowrap 
@@ -135,12 +135,15 @@ button
   border: none 
   font-size: $h2
   font-weight: 600
+  font-size: 24px
   border-radius: $small-border
   &.primary  
-    background-color: $prim 
-    color: white
+    background: linear-gradient(180deg, rgba(246, 248, 255, 1) 0%, rgba(189, 200, 227, 1) 100%)
+    color: $sec-text-color
+    gap: 8px
     &:hover  
       background-color: $hover-prim 
+      border: $gradient
   &.secondary  
     background-color: $sec 
     color: $text-color
@@ -207,11 +210,17 @@ nav
 .hero
     @include grid
     width: 100vw
-    height: 200vh
-
+    height: 100vh
+    gap: 22px
     background-size: cover  
     background-position: center
     justify-items: center
+.title
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(153, 153, 153, 1) 100%)
+    background-clip: text
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+    text-align: center
 .parallax
     @include grid
     width: 100vw
@@ -285,4 +294,11 @@ nav
         border: 2px solid $gradient
 .main
     @include flex-row
-    
+.tag
+    background: $input-color
+    padding: 6px 18px
+    border-radius: 8px
+    color: #fff
+    font-size: 22px
+    @include flex-row
+    gap: 4px
