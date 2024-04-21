@@ -19,6 +19,7 @@
     "react-resizable-panels": "^2.0.18",
     "react-reveal": "^1.2.2",
     "react-type-animation": "^3.2.0",
+    "reactive-button": "^1.3.15",
     "retell": "^1.1.1",
     "retell-client-js-sdk": "^1.3.2",
     "sass": "^1.75.0",

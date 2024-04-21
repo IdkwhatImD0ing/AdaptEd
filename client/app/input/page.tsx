@@ -1,36 +1,28 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';  // Import React and useState hook
+import React, { useState } from "react"; // Import React and useState hook
 import "../global.sass";
 import Voice from "../components/Voice";
 import NavBar from "../navBar/NavBar";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
 
+import { useRouter } from "next/navigation";
+
 export default function Input() {
   // State for managing input value
-  const [topic, setTopic] = useState('');
-  
+  const [topic, setTopic] = useState("");
+
+  const { push } = useRouter();
+
   // Event handler for making the API call
   const handleButtonClick = async () => {
     try {
       console.log(topic);
-      const formData = new URLSearchParams();
-      formData.append('topic', topic);
-      const response = await fetch('http://localhost:8000/generate_lecture', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: formData
-    });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log(data); // Process your response further
+
+      push(`/research?topic=${encodeURIComponent(topic)}`);
     } catch (error) {
-      console.error("Failed to fetch data: ", error);
+      console.error("Failed to store data: ", error);
     }
   };
 
@@ -51,8 +43,8 @@ export default function Input() {
             type="text"
             placeholder="name a topic..."
             className="large-input"
-            value={topic}  // Set the value of the input
-            onChange={e => setTopic(e.target.value)}  // Update the state on every change
+            value={topic} // Set the value of the input
+            onChange={(e) => setTopic(e.target.value)} // Update the state on every change
           />
         </div>
 
