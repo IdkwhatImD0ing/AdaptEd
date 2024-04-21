@@ -15,9 +15,7 @@ load_dotenv()
 
 router = APIRouter(
     prefix="/voice",
-    responses={404: {
-        "description": "Not found"
-    }},
+    responses={404: {"description": "Not found"}},
 )
 
 client = Retell(api_key=os.environ["RETELL_API_KEY"])
@@ -25,6 +23,9 @@ client = Retell(api_key=os.environ["RETELL_API_KEY"])
 # Maps call IDs to their respective data_websockets
 # Used to send function call results to sidebar because Retell's websocket doesn't
 data_websockets = {}
+retell_websockets = {}
+
+response_id = 0
 
 
 @router.post("/register-call-on-your-server")
@@ -39,15 +40,19 @@ async def handle_register_call_api(request: Request):
             audio_websocket_protocol="web",
             sample_rate=24000,
         )
-        return JSONResponse({
-            "callId": call.call_id,
-            "sampleRate": call.sample_rate,
-        })
+
+        print(call)
+
+        return JSONResponse(
+            {
+                "callId": call.call_id,
+                "sampleRate": call.sample_rate,
+            }
+        )
     except Exception as error:
         print(f"Error registering call: {error}")
         # Send an error response back to the client
-        return JSONResponse({"error": "Failed to register call"},
-                            status_code=500)
+        return JSONResponse({"error": "Failed to register call"}, status_code=500)
 
 
 @router.websocket("/llm-websocket/{call_id}")
@@ -55,16 +60,18 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
     await websocket.accept()
     print(f"LLM WebSocket connected for {call_id}")
 
+    global response_id
+
+    retell_websockets[call_id] = websocket
+
     llm_client = LlmClient()
 
     # send first message to signal ready of server
-    response_id = 0
     first_event = llm_client.draft_begin_messsage()
     await websocket.send_text(json.dumps(first_event))
 
     async def stream_response(request):
         global data_websockets
-        nonlocal response_id
         nonlocal call_id
 
         for event in llm_client.draft_response(request):
@@ -76,7 +83,9 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
                 else:
                     print(
                         "\033[91mError: Function call occurred but no data_websocket connected to send it for call ID: "
-                        + call_id + "\033[0m")
+                        + call_id
+                        + "\033[0m"
+                    )
             else:
                 await websocket.send_text(json.dumps(event))
                 if request["response_id"] < response_id:
@@ -93,6 +102,7 @@ async def websocket_handler(websocket: WebSocket, call_id: str):
             if "response_id" not in request:
                 continue  # no response needed, process live transcript update if needed
             response_id = request["response_id"]
+            print("RESPONSE-ID", response_id)
             asyncio.create_task(stream_response(request))
     except WebSocketDisconnect:
         print(f"LLM WebSocket disconnected for {call_id}")
@@ -108,9 +118,35 @@ async def data_websocket_handler(websocket: WebSocket, call_id: str):
     data_websockets[call_id] = websocket
     print(f"Data websocket connected for {call_id}")
 
+    global response_id
+
     try:
         while True:
-            await websocket.receive_text()
+            # Speak any messages that get sent to backend
+            message = await websocket.receive_text()
+            print("\n------SPEAKING------\n", message, response_id)
+            if call_id in retell_websockets:
+                text = {
+                    "response_type": "agent_interrupt",
+                    "interrupt_id": 123,
+                    "content": message,
+                    "content_complete": True,
+                    "end_call": False,
+                }
+
+                print(text)
+
+                response_id += 1
+
+                retell_websocket = retell_websockets[call_id]
+                await retell_websocket.send_text(json.dumps(text))
+            else:
+                print(
+                    "\033[91mError: Retell websocket not connected for call ID: "
+                    + call_id
+                    + "\033[0m"
+                )
+
     except WebSocketDisconnect:
         print(f"Data WebSocket disconnected for {call_id}")
         del data_websockets[call_id]

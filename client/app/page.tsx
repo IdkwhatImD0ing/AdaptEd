@@ -2,9 +2,10 @@
 
 import Voice from "./components/Voice";
 import Slideshow, { skipToSlide } from "./components/Slideshow";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { DeckContext } from "spectacle";
 import { title } from "process";
+import { RetellWebClient } from "retell-client-js-sdk";
 
 export default function Home() {
   const testLecture: Lecture = {
@@ -239,14 +240,34 @@ export default function Home() {
         skipToSlide(slide_number - 1);
         break;
       case "goto_slide":
-        console.log(result.arguments);
         skipToSlide(result.arguments["slide_number"]);
         break;
     }
   };
 
+  const retellClientRef = useRef<RetellWebClient>();
+  const funcCallSocketRef = useRef<WebSocket>();
+
   const handleSlideChange = (slideIndex: number) => {
     console.log("Current slide number:", slideIndex);
+    // Have the voice AI speak the slide speaker notes
+    const slide = testLecture.slides[slideIndex];
+    if (slide.speaker_notes) {
+      funcCallSocketRef.current?.send(slide.speaker_notes);
+    }
+  };
+
+  const handleDataSocketConnect = () => {
+    setTimeout(() => {
+      const { searchParams } = new URL(window.location.href);
+      const slide_index = searchParams.get("slideIndex");
+      const slide_number = slide_index ? parseInt(slide_index) : 0;
+      const slide = testLecture.slides[slide_number];
+      console.log("CONVERSATION STARTED", slide);
+      if (slide.speaker_notes) {
+        funcCallSocketRef.current?.send(slide.speaker_notes);
+      }
+    }, 3000);
   };
 
   return (
@@ -256,7 +277,12 @@ export default function Home() {
         <br />
         <a href="/api/auth/logout">Logout</a>
       </div>
-      <Voice onFuncCallResult={handleFuncCallResult} />
+      <Voice
+        onFuncCallResult={handleFuncCallResult}
+        retellClientRef={retellClientRef}
+        funcCallSocketRef={funcCallSocketRef}
+        onDataSocketConnect={handleDataSocketConnect}
+      />
       <div>
         <h1>{testLecture.title}</h1>
         <Slideshow lecture={testLecture} onSlideChange={handleSlideChange} />

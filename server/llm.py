@@ -4,13 +4,15 @@ from fastapi import Request
 from langchain.chat_models import ChatOpenAI
 from langchain.agents import AgentExecutor, create_openai_tools_agent
 from langchain.schema import HumanMessage, SystemMessage, AIMessage
-from langchain.tools import Tool
+
+# from langchain.tools import Tool
 from langchain.tools.base import StructuredTool
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+
+# from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain import hub
 
-beginSentence = "Hey there!"
-agentPrompt = "You are a helpful teaching assistant."
+beginSentence = ""
+agentPrompt = "You are a helpful teacher."
 
 
 class LlmClient:
@@ -83,13 +85,12 @@ class LlmClient:
         transcript_messages = self.convert_transcript_to_messages(request["transcript"])
         prompt.extend(transcript_messages)
 
-        if request["interaction_type"] == "reminder_required":
-            print("PAUSE IN CONVO")
-            prompt.append(
-                HumanMessage(
-                    content="(Now the user has not responded in a while, you would say:)",
-                )
-            )
+        # if request["interaction_type"] == "reminder_required":
+        #     prompt.append(
+        #         HumanMessage(
+        #             content="(Now the user has not responded in a while, you would say:)",
+        #         )
+        #     )
         return prompt
 
     def draft_response(self, request: Request):
@@ -102,30 +103,31 @@ class LlmClient:
 
         history = self.prepare_prompt(request)
 
+        func_call = {}
+
+        def next_or_prev_slide(func):
+            nonlocal func_call
+            if func_call:
+                return "Already called and succeeded"
+            func_call = func
+            return "Success"
+
         tools = [
             StructuredTool.from_function(
                 name="next_slide",
-                func=lambda: {
-                    "is_function": True,
-                    "function_name": "next_slide",
-                },
+                func=lambda: next_or_prev_slide({"name": "next_slide"}),
                 description="Move to the next slide if the user explicitly asks for it.",
             ),
             StructuredTool.from_function(
                 name="prev_slide",
-                func=lambda: {
-                    "is_function": True,
-                    "function_name": "prev_slide",
-                },
+                func=lambda: next_or_prev_slide({"name": "prev_slide"}),
                 description="Move to the previous slide if the user explicitly asks for it.",
             ),
             StructuredTool.from_function(
                 name="goto_slide",
-                func=lambda slide_number: {
-                    "is_function": True,
-                    "function_name": "goto_slide",
-                    "arguments": {"slide_number": slide_number},
-                },
+                func=lambda slide_number: next_or_prev_slide(
+                    {"name": "goto_slide", "arguments": {"slide_number": slide_number}}
+                ),
                 description="Move to the specified slide if the user explicitly asks for it.",
             ),
         ]
@@ -148,6 +150,15 @@ class LlmClient:
         #             "content_complete": True,
         #             "end_call": False,
         #         }
+
+        if func_call:
+            print("FUNC CALL")
+            yield {
+                "response_id": request["response_id"],
+                "name": func_call["name"],
+                "arguments": func_call.get("arguments", {}),
+                "is_function": True,
+            }
 
         for chunk in result["output"]:
             yield {
