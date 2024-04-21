@@ -34,25 +34,37 @@ export function shutdownSlideshow() {
   }
 }
 
+const theme = {
+  colors: {
+    primary: "black",
+    secondary: "purple",
+    tertiary: "white",
+  },
+  backdropStyle: {
+    backgroundColor: "white",
+  },
+};
+
 export default function Slideshow(props: { lecture: Lecture }) {
   return (
-    <Deck template={<DeckControls />}>
+    <Deck theme={theme} template={<DeckControls />}>
       {props.lecture.slides.map((slide, index) => (
         <React.Fragment key={index}>
           {slide.template_id === 1 && (
             <SlideLayout.TwoColumn
               key={index}
-              left={<Heading>{slide.title}</Heading>}
+              left={
+                <>
+                  <Heading>{slide.title}</Heading>
+                  {slide.texts?.map((text, index) => (
+                    <Text key={index}>{text}</Text>
+                  ))}
+                </>
+              }
               right={
                 slide.images.length > 0 &&
                 slide.images.map((image, index) => (
-                  <Image
-                    key={index}
-                    src={image.source}
-                    alt={image.description}
-                    width={500}
-                    height={300}
-                  />
+                  <Image key={index} src={image.src} alt={image.description} />
                 ))
               }
             />
@@ -63,34 +75,28 @@ export default function Slideshow(props: { lecture: Lecture }) {
               left={
                 slide.images.length > 0 &&
                 slide.images.map((image, index) => (
-                  <Image
-                    key={index}
-                    src={image.source}
-                    alt={image.description}
-                    width={500}
-                    height={300}
-                  />
+                  <Image key={index} src={image.src} alt={image.description} />
                 ))
               }
-              right={<Heading>{slide.title}</Heading>}
+              right={
+                <>
+                  <Heading>{slide.title}</Heading>
+                  {slide.texts?.map((text, index) => (
+                    <Text key={index}>{text}</Text>
+                  ))}
+                </>
+              }
             />
           )}
           {slide.template_id === 3 && (
             <SlideLayout.Center key={index}>
               <Heading>{slide.title}</Heading>
-              {/* {slide.subtitle && <Heading as="h2">{slide.subtitle}</Heading>} */}
-              {slide.texts.map((text, index) => (
+              {slide.texts?.map((text, index) => (
                 <Text key={index}>{text}</Text>
               ))}
               {slide.images.length > 0 &&
                 slide.images.map((image, index) => (
-                  <Image
-                    key={index}
-                    src={image.source}
-                    alt={image.description}
-                    width={500}
-                    height={300}
-                  />
+                  <Image key={index} src={image.src} alt={image.description} />
                 ))}
             </SlideLayout.Center>
           )}
@@ -98,14 +104,13 @@ export default function Slideshow(props: { lecture: Lecture }) {
             <SlideLayout.List
               key={index}
               title={slide.title}
-              items={slide.texts}
+              items={slide.texts || []}
             />
           )}
           {slide.template_id === 5 && (
             <SlideLayout.Section key={index}>
               <Heading>{slide.title}</Heading>
-              {/* {slide.subtitle && <Heading as="h2">{slide.subtitle}</Heading>} */}
-              {slide.texts.map((text, index) => (
+              {slide.texts?.map((text, index) => (
                 <Text key={index}>{text}</Text>
               ))}
             </SlideLayout.Section>
@@ -113,8 +118,7 @@ export default function Slideshow(props: { lecture: Lecture }) {
           {slide.template_id === 6 && (
             <SlideLayout.Statement key={index}>
               <Heading>{slide.title}</Heading>
-              {/* {slide.subtitle && <Heading as="h2">{slide.subtitle}</Heading>} */}
-              {slide.texts.map((text, index) => (
+              {slide.texts?.map((text, index) => (
                 <Text key={index}>{text}</Text>
               ))}
             </SlideLayout.Statement>
@@ -122,34 +126,33 @@ export default function Slideshow(props: { lecture: Lecture }) {
           {slide.template_id === 7 && (
             <SlideLayout.BigFact key={index}>
               <Heading>{slide.title}</Heading>
-              {/* {slide.subtitle && <Heading as="h2">{slide.subtitle}</Heading>} */}
-              {slide.texts.map((text, index) => (
+              {slide.texts?.map((text, index) => (
                 <Text key={index}>{text}</Text>
               ))}
             </SlideLayout.BigFact>
           )}
           {slide.template_id === 8 && (
-            <SlideLayout.Quote key={index} attribution={slide.texts[1]}>
+            <SlideLayout.Quote key={index} attribution={slide.texts?.[1]}>
               <Heading>{slide.title}</Heading>
-              {/* {slide.subtitle && <Heading as="h2">{slide.subtitle}</Heading>} */}
-              {slide.texts[0]}
+              {slide.texts?.map((text, index) => (
+                <Text key={index}>{text}</Text>
+              ))}
             </SlideLayout.Quote>
           )}
           {slide.template_id === 9 && (
             <SlideLayout.HorizontalImage
               key={index}
-              src={slide.images[0].source}
+              src={slide.images[0].src}
               alt={slide.images[0].description}
               title={slide.title}
-              description={slide.subtitle}
             />
           )}
           {slide.template_id === 10 && (
             <SlideLayout.VerticalImage
               key={index}
-              src={slide.images[0].source}
+              src={slide.images[0].src}
               alt={slide.images[0].description}
-              listItems={slide.texts}
+              listItems={slide.texts || []}
               title={slide.title}
               titleProps={{ color: "red" }}
             />
@@ -158,15 +161,15 @@ export default function Slideshow(props: { lecture: Lecture }) {
             <SlideLayout.ThreeUpImage
               key={index}
               primary={{
-                src: slide.images[0].source,
+                src: slide.images[0].src,
                 alt: slide.images[0].description,
               }}
               top={{
-                src: slide.images[1].source,
+                src: slide.images[1].src,
                 alt: slide.images[1].description,
               }}
               bottom={{
-                src: slide.images[2].source,
+                src: slide.images[2].src,
                 alt: slide.images[2].description,
               }}
             />
@@ -174,7 +177,7 @@ export default function Slideshow(props: { lecture: Lecture }) {
           {slide.template_id === 12 && (
             <SlideLayout.FullBleedImage
               key={index}
-              src={slide.images[0].source}
+              src={slide.images[0].src}
               alt={slide.images[0].description}
             />
           )}
