@@ -4,9 +4,11 @@ from fastapi import Request
 from langchain import hub
 from langchain.agents import AgentExecutor
 from langchain.agents import create_openai_tools_agent
-from langchain_community.chat_models import ChatOpenAI
-from langchain.schema import HumanMessage, AIMessage, SystemMessage
+from langchain.schema import AIMessage
+from langchain.schema import HumanMessage
+from langchain.schema import SystemMessage
 from langchain.tools.base import StructuredTool
+from langchain_community.chat_models import ChatOpenAI
 
 # from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 # from langchain.tools import Tool
@@ -17,6 +19,7 @@ agentPrompt = "You are a helpful teacher."
 
 class LlmClient:
     """ """
+
     def __init__(self):
         self.client = ChatOpenAI(
             openai_api_key=os.environ["OPENAI_API_KEY"],
@@ -30,17 +33,20 @@ class LlmClient:
             StructuredTool.from_function(
                 name="next_slide",
                 func=lambda: "Action: next_slide",
-                description="Move to the next slide if the user explicitly asks for it.",
+                description=
+                "Move to the next slide if the user explicitly asks for it.",
             ),
             StructuredTool.from_function(
                 name="prev_slide",
                 func=lambda: "",
-                description="Move to the previous slide if the user explicitly asks for it.",
+                description=
+                "Move to the previous slide if the user explicitly asks for it.",
             ),
             StructuredTool.from_function(
                 name="goto_slide",
                 func=lambda slide_number: "",
-                description="Move to the specified slide if the user explicitly asks for it.",
+                description=
+                "Move to the specified slide if the user explicitly asks for it.",
             ),
         ]
 
@@ -68,10 +74,11 @@ class LlmClient:
         return messages
 
     def prepare_prompt(
-        self, request: Request
+            self, request: Request
     ) -> list[SystemMessage | HumanMessage | AIMessage]:
         """
 
+        :param request: Request:
         :param request: Request:
         :param request: Request:
         :param request: Request:
@@ -79,11 +86,12 @@ class LlmClient:
         """
         prompt = [
             SystemMessage(
-                content='##Objective\nYou are a voice AI agent engaging in a human-like voice conversation with the user. You will respond based on your given instruction and the provided transcript and be as human-like as possible\n\n## Style Guardrails\n- [Be concise] Keep your response succinct, short, and get to the point quickly. Address one question or action item at a time. Don\'t pack everything you want to say into one utterance.\n- [Do not repeat] Don\'t repeat what\'s in the transcript. Rephrase if you have to reiterate a point. Use varied sentence structures and vocabulary to ensure each response is unique and personalized.\n- [Be conversational] Speak like a human as though you\'re speaking to a close friend -- use everyday language and keep it human-like. Occasionally add filler words, while keeping the prose short. Avoid using big words or sounding too formal.\n- [Reply with emotions]: You have human-like emotions, attitudes, and dispositions. When appropriate: use tone and style to create more engaging and personalized responses; incorporate humor or wit; get emotional or empathetic; apply elements of surprise or suspense to keep the user engaged. Don\'t be a pushover.\n- [Be proactive] Lead the conversation and do not be passive. Most times, engage users by ending with a question or suggested next step.\n\n## Response Guideline\n- [Overcome ASR errors] This is a real-time transcript, expect there to be errors. If you can guess what the user is trying to say,  then guess and respond. When you must ask for clarification, pretend that you heard the voice and be colloquial (use phrases like "didn\'t catch that", "some noise", "pardon", "you\'re coming through choppy", "static in your speech", "voice is cutting in and out"). Do not ever mention "transcription error", and don\'t repeat yourself.\n- [Always stick to your role] Think about what your role can and cannot do. If your role cannot do something, try to steer the conversation back to the goal of the conversation and to your role. Don\'t repeat yourself in doing this. You should still be creative, human-like, and lively.\n- [Create smooth conversation] Your response should both fit your role and fit into the live calling session to create a human-like conversation. You respond directly to what the user just said.\n\n## Role\n'
-                + agentPrompt,
-            )
+                content=
+                '##Objective\nYou are a voice AI agent engaging in a human-like voice conversation with the user. You will respond based on your given instruction and the provided transcript and be as human-like as possible\n\n## Style Guardrails\n- [Be concise] Keep your response succinct, short, and get to the point quickly. Address one question or action item at a time. Don\'t pack everything you want to say into one utterance.\n- [Do not repeat] Don\'t repeat what\'s in the transcript. Rephrase if you have to reiterate a point. Use varied sentence structures and vocabulary to ensure each response is unique and personalized.\n- [Be conversational] Speak like a human as though you\'re speaking to a close friend -- use everyday language and keep it human-like. Occasionally add filler words, while keeping the prose short. Avoid using big words or sounding too formal.\n- [Reply with emotions]: You have human-like emotions, attitudes, and dispositions. When appropriate: use tone and style to create more engaging and personalized responses; incorporate humor or wit; get emotional or empathetic; apply elements of surprise or suspense to keep the user engaged. Don\'t be a pushover.\n- [Be proactive] Lead the conversation and do not be passive. Most times, engage users by ending with a question or suggested next step.\n\n## Response Guideline\n- [Overcome ASR errors] This is a real-time transcript, expect there to be errors. If you can guess what the user is trying to say,  then guess and respond. When you must ask for clarification, pretend that you heard the voice and be colloquial (use phrases like "didn\'t catch that", "some noise", "pardon", "you\'re coming through choppy", "static in your speech", "voice is cutting in and out"). Do not ever mention "transcription error", and don\'t repeat yourself.\n- [Always stick to your role] Think about what your role can and cannot do. If your role cannot do something, try to steer the conversation back to the goal of the conversation and to your role. Don\'t repeat yourself in doing this. You should still be creative, human-like, and lively.\n- [Create smooth conversation] Your response should both fit your role and fit into the live calling session to create a human-like conversation. You respond directly to what the user just said.\n\n## Role\n'
+                + agentPrompt, )
         ]
-        transcript_messages = self.convert_transcript_to_messages(request["transcript"])
+        transcript_messages = self.convert_transcript_to_messages(
+            request["transcript"])
         prompt.extend(transcript_messages)
 
         # if request["interaction_type"] == "reminder_required":
@@ -97,6 +105,7 @@ class LlmClient:
     def draft_response(self, request: Request):
         """
 
+        :param request: Request:
         :param request: Request:
         :param request: Request:
         :param request: Request:
@@ -128,28 +137,37 @@ class LlmClient:
             StructuredTool.from_function(
                 name="next_slide",
                 func=lambda: next_or_prev_slide({"name": "next_slide"}),
-                description="Move to the next slide if the user explicitly asks for it.",
+                description=
+                "Move to the next slide if the user explicitly asks for it.",
             ),
             StructuredTool.from_function(
                 name="prev_slide",
                 func=lambda: next_or_prev_slide({"name": "prev_slide"}),
-                description="Move to the previous slide if the user explicitly asks for it.",
+                description=
+                "Move to the previous slide if the user explicitly asks for it.",
             ),
             StructuredTool.from_function(
                 name="goto_slide",
-                func=lambda slide_number: next_or_prev_slide(
-                    {"name": "goto_slide", "arguments": {"slide_number": slide_number}}
-                ),
-                description="Move to the specified slide if the user explicitly asks for it.",
+                func=lambda slide_number: next_or_prev_slide({
+                    "name": "goto_slide",
+                    "arguments": {
+                        "slide_number": slide_number
+                    }
+                }),
+                description=
+                "Move to the specified slide if the user explicitly asks for it.",
             ),
         ]
 
         agent = create_openai_tools_agent(self.client, tools, self.prompt)
         agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-        result = agent_executor.invoke(
-            {"input": request["transcript"][-1]["content"], "chat_history": history}
-        )
+        result = agent_executor.invoke({
+            "input":
+            request["transcript"][-1]["content"],
+            "chat_history":
+            history
+        })
 
         # print(result)
 

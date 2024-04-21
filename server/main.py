@@ -2,8 +2,8 @@ import logging
 import os
 from typing import Optional
 
-import voice
 import generate_route
+import voice
 from aggregate import generate
 from dotenv import load_dotenv
 from fastapi import FastAPI
