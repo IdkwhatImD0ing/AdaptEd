@@ -1,5 +1,8 @@
 "use client";
 import Fade from "react-reveal/Fade";
+
+import "./global.sass";
+
 import { WandSparkles, Sparkles } from "lucide-react";
 import NavBarLanding from "./NavBarLanding";
 import { TypeAnimation } from "react-type-animation";

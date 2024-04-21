@@ -1,10 +1,8 @@
-import Image from "next/image";
+"use client";
 
 import Voice, { MessageTranscript } from "../components/Voice";
 import Slideshow, { skipToSlide } from "../components/Slideshow";
-import { useContext, useEffect, useRef, useState } from "react";
-import { DeckContext } from "spectacle";
-import { title } from "process";
+import { useState } from "react";
 import { RetellWebClient } from "retell-client-js-sdk";
 
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
