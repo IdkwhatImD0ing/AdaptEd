@@ -37,8 +37,8 @@ Next, use get_descriptions tool to get the descriptions of the images.
 def get_descriptions(prompt: str, images: List[str]) -> str:
     """This function takes in a list of images and a prompt, and explains why the image is relevant to the prompt.
 
-    :param prompt: str: 
-    :param images: List[str]: 
+    :param prompt: str:
+    :param images: List[str]:
 
     """
     client = AsyncOpenAI()
