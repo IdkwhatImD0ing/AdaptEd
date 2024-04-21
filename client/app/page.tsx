@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import Voice from "./components/Voice";
 import Slideshow, { skipToSlide } from "./components/Slideshow";
@@ -273,16 +274,30 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>
-        <a href="/api/auth/login">Login</a>
-        <br />
-        <a href="/api/auth/logout">Logout</a>
+    <div>
+    <NavBarLanding />
+    <main className="hero">
+      <div className="tag">
+        <WandSparkles />
+        conversational learning
       </div>
-      <Voice />
-      <h1 className="text-4xl font-bold">Learn anything</h1>
-      <input type="text" placeholder="type a topic..." />
-      <button type="submit">Submit form</button>
+      <h1 className="title">
+        Learn through conversations.
+        <br />
+        Not textbooks.
+      </h1>
+      <button className="primary">
+        {" "}
+        <Sparkles /> Make magic
+      </button>
     </main>
+    <section>
+      <img src="./mockupLanding_adapted.svg" alt="" /> 
+    </section>
+    <Voice />
+  </div>
+ 
+       
+   
   );
 }
