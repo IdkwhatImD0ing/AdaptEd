@@ -1,8 +1,9 @@
+import json
+import os
+
+from fastapi import Request
 from openai import OpenAI
 from openai.types.chat import ChatCompletionMessageParam
-import os
-import json
-from fastapi import Request
 
 beginSentence = "Hey there!"
 agentPrompt = "You are a helpful teaching assistant."
