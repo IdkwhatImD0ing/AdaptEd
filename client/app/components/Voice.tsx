@@ -10,6 +10,8 @@ const SERVER_ENDPOINT =
 
 const FUNC_CALL_ENDPOINT = "ws://localhost:8000/voice/data-websocket";
 
+const RPI_NGROK_URL = "wss://your-ngrok-url-here";
+
 interface RegisterCallResponse {
   callId?: string;
   sampleRate: number;
@@ -29,6 +31,10 @@ export default function Voice(props: {
   setFuncCallSocket: (funcCallSocket: WebSocket) => void;
   setRetellClient: (retellClient: RetellWebClient) => void;
 }) {
+  const [rpiWebsocket, setRpiWebsocket] = useState<WebSocket | undefined>(
+    undefined
+  );
+
   const [isCalling, setIsCalling] = useState(false);
   const [userSpeaking, setUserSpeaking] = useState(false);
 
@@ -38,6 +44,10 @@ export default function Voice(props: {
       console.log("SDK already initialized");
       return;
     }
+
+    // Connect to ngrok url for rpi websocket
+    const rpiWebsocket = new WebSocket(RPI_NGROK_URL);
+    setRpiWebsocket(rpiWebsocket);
 
     console.log("Mounted");
 
@@ -64,6 +74,22 @@ export default function Voice(props: {
     newRetellClient.on("error", (error) => {
       console.error("An error occurred:", error);
       setIsCalling(false); // Update button to "Start" in case of error
+    });
+
+    newRetellClient.on("agentStartTalking", () => {
+      console.log("Agent started talking");
+      // Send "start" event to rpi websocket
+      if (rpiWebsocket.readyState === WebSocket.OPEN) {
+        rpiWebsocket.send("start");
+      }
+    });
+
+    newRetellClient.on("agentStopTalking", () => {
+      console.log("Agent stopped talking");
+      // Send "stop" event to rpi websocket
+      if (rpiWebsocket.readyState === WebSocket.OPEN) {
+        rpiWebsocket.send("stop");
+      }
     });
 
     newRetellClient.on(
