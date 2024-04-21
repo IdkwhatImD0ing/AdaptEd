@@ -2,7 +2,7 @@ type Image = {
     source: string;
     description: string;
   };
-  
+
 type Slide = {
     title: string;
     subtitle: string;
