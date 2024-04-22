@@ -17,6 +17,8 @@ function page() {
     undefined
   );
 
+  const [messages, setMessages] = useState<MessageTranscript[]>([]);
+
   const getSlideIndex = () => {
     const { searchParams } = new URL(window.location.href);
     const slide_index = searchParams.get("slideIndex");
@@ -28,7 +30,7 @@ function page() {
     description:
       "Exploring self-balancing binary search trees for efficient data storage and retrieval.",
     slides: [
-      { title: "Red-Black Trees: Intro in 4", template_id: 4, images: [] },
+      { title: "Red-Black Trees: What are they?", template_id: 4, images: [] },
       {
         title: "Binary Search Trees",
         template_id: 0,
@@ -77,21 +79,6 @@ function page() {
             src: "https://media.geeksforgeeks.org/wp-content/uploads/20221221160923/UntitledDiagramdrawio-660x371.png",
             description:
               "This image displays two diagrams illustrating examples of binary trees: a balanced binary tree on the left and an unbalanced binary tree on the right. Each node in the trees is labeled with a value and the depth 'd', calculated as the height of the left child minus the height of the right child, providing a visual comparison of structural differences between balanced and unbalanced binary trees in data structure contexts.",
-          },
-          {
-            src: "https://media.geeksforgeeks.org/wp-content/uploads/AVL-Insertion-1.jpg",
-            description:
-              "The image depicts two binary trees showing the process of inserting a node with the value 14 into an AVL tree. On the left, the tree before insertion shows the balance factors of each node, and the right part demonstrates how the tree looks after the node insertion, with the new node correctly placed to maintain the AVL property of balance.",
-          },
-          {
-            src: "https://media.geeksforgeeks.org/wp-content/uploads/20200427100650/red-black-tree.png",
-            description:
-              "This image depicts a red-black tree, a type of self-balancing binary search tree, where each node contains an integer and is color-coded either red or black according to certain properties that maintain tree balance.",
-          },
-          {
-            src: "https://scaler.com/topics/images/important-property-of-b-tree.webp",
-            description:
-              "The image displays a hierarchical tree diagram with nodes, each node containing one or two numbers. This diagram represents a binary tree used in computer science to illustrate data structures or algorithms.",
           },
         ],
       },
@@ -272,8 +259,9 @@ function page() {
   const handleSlideChange = (slideIndex: number) => {
     console.log("Current slide number:", slideIndex);
     const slide = testLecture.slides[slideIndex];
-    if (slide.speaker_notes) {
-      funcCallSocket?.send(slide.speaker_notes);
+    const speaker_notes = slide.speaker_notes || slide.title;
+    if (speaker_notes) {
+      funcCallSocket?.send(speaker_notes);
     }
   };
 
@@ -283,18 +271,22 @@ function page() {
       const slide_number = getSlideIndex();
       const slide = testLecture.slides[slide_number];
       console.log("CONVERSATION STARTED", slide);
-      if (slide.speaker_notes) {
-        funcCallSocket?.send(slide.speaker_notes);
+      const speaker_notes = slide.speaker_notes || slide.title;
+      if (speaker_notes) {
+        funcCallSocket?.send(speaker_notes);
       }
     }, 5000);
   };
 
   // If last message equals current slide speaker notes, slide has finished so time to move oon
   const handleUpdate = (update: { transcript: MessageTranscript[] }) => {
+    setMessages(update.transcript);
+
     const lastMessage = update.transcript[update.transcript.length - 1];
 
     const slide_number = getSlideIndex();
-    const speaker_notes = testLecture.slides[slide_number].speaker_notes;
+    const slide = testLecture.slides[slide_number];
+    const speaker_notes = slide.speaker_notes || slide.title;
 
     if (lastMessage.content.includes(speaker_notes!)) {
       // If the slide is not the last one, skip to the next slide
@@ -307,26 +299,54 @@ function page() {
   };
 
   return (
-    <>
-      <Voice
-        onFuncCallResult={handleFuncCallResult}
-        onDataSocketConnect={handleDataSocketConnect}
-        funcCallSocket={funcCallSocket}
-        retellClient={retellClient}
-        setFuncCallSocket={setFuncCallSocket}
-        setRetellClient={setRetellClient}
-        onUpdate={handleUpdate}
-      />
-      <PanelGroup direction="horizontal">
-        <Panel minSize={25} defaultSize={75} order={1}>
-          <Slideshow lecture={testLecture} onSlideChange={handleSlideChange} />
+    <main className="flex flex-col h-full w-full">
+      <PanelGroup direction="vertical">
+        <Panel defaultSize={100}>
+          <PanelGroup direction="horizontal">
+            <Panel minSize={25} defaultSize={100}>
+              <div className="flex flex-col items-center">
+                <h1 className="text-2xl font-bold py-4">{testLecture.title}</h1>
+                <div className="w-full h-min relative flex  items-center justify-center">
+                  <div className="absolute z-20 h-full top-0 left-0 w-full flex items-center justify-center">
+                    <Voice
+                      onFuncCallResult={handleFuncCallResult}
+                      onDataSocketConnect={handleDataSocketConnect}
+                      funcCallSocket={funcCallSocket}
+                      retellClient={retellClient}
+                      setFuncCallSocket={setFuncCallSocket}
+                      setRetellClient={setRetellClient}
+                      onUpdate={handleUpdate}
+                    />
+                  </div>
+                  {!funcCallSocket && (
+                    <div className="absolute z-10 h-full top-0 left-0 w-full bg-white/75"></div>
+                  )}
+                  <Slideshow
+                    lecture={testLecture}
+                    onSlideChange={handleSlideChange}
+                  />
+                </div>
+                <h3 className="text-lg text-center">
+                  Ask questions about this by interrupting the lecture
+                </h3>
+              </div>
+            </Panel>
+            <PanelResizeHandle />
+            <Panel
+              id="sidebar"
+              defaultSize={messages.length > 0 ? 25 : 0}
+              minSize={messages.length > 0 ? 25 : 0}
+            >
+              <Sidebar messages={messages} />
+            </Panel>
+          </PanelGroup>
         </Panel>
         <PanelResizeHandle />
-        <Panel id="sidebar" minSize={25} defaultSize={25} order={2}>
-          <Sidebar />
+        <Panel collapsible={true} defaultSize={0}>
+          <h1></h1>
         </Panel>
       </PanelGroup>
-    </>
+    </main>
   );
 }
 
