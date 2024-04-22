@@ -56,7 +56,9 @@ export default function Home() {
           </button>
         </Fade>
       </main>
+      
       <section>
+      <Fade bottom delay={1700}>
         <img
           src="./mockupLanding_adapted.svg"
           style={{
@@ -66,6 +68,7 @@ export default function Home() {
             top: "0",
           }}
         />
+        </Fade>
       </section>
     </div>
   );
