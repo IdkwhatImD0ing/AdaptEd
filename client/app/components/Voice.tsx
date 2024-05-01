@@ -1,107 +1,106 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState } from "react";
-import { RetellWebClient } from "retell-client-js-sdk";
+import {useEffect, useRef, useState} from 'react'
+import {RetellWebClient} from 'retell-client-js-sdk'
 
-const AGENT_ID = "094ec635562bfaa326741f43e55db95d";
+const AGENT_ID = '094ec635562bfaa326741f43e55db95d'
 
 const SERVER_ENDPOINT =
-  "http://localhost:8000/voice/register-call-on-your-server";
+  'http://localhost:8000/voice/register-call-on-your-server'
 
-const FUNC_CALL_ENDPOINT = "ws://localhost:8000/voice/data-websocket";
+const FUNC_CALL_ENDPOINT = 'ws://localhost:8000/voice/data-websocket'
 
-const RPI_NGROK_URL = "wss://your-ngrok-url-here";
-
+const RPI_NGROK_URL = 'wss://https://31fb-2600-387-15-12-00-a.ngrok-free.app'
 interface RegisterCallResponse {
-  callId?: string;
-  sampleRate: number;
+  callId?: string
+  sampleRate: number
 }
 
 export type MessageTranscript = {
-  role: string;
-  content: string;
-};
+  role: string
+  content: string
+}
 
 export default function Voice(props: {
-  onFuncCallResult?: (result: any) => void;
-  onDataSocketConnect?: () => void;
-  onUpdate?: (update: { transcript: MessageTranscript[] }) => void;
-  funcCallSocket: WebSocket | undefined;
-  retellClient: RetellWebClient | undefined;
-  setFuncCallSocket: (funcCallSocket: WebSocket) => void;
-  setRetellClient: (retellClient: RetellWebClient) => void;
+  onFuncCallResult?: (result: any) => void
+  onDataSocketConnect?: () => void
+  onUpdate?: (update: {transcript: MessageTranscript[]}) => void
+  funcCallSocket: WebSocket | undefined
+  retellClient: RetellWebClient | undefined
+  setFuncCallSocket: (funcCallSocket: WebSocket) => void
+  setRetellClient: (retellClient: RetellWebClient) => void
 }) {
   const [rpiWebsocket, setRpiWebsocket] = useState<WebSocket | undefined>(
-    undefined
-  );
+    undefined,
+  )
 
-  const [isCalling, setIsCalling] = useState(false);
-  const [userSpeaking, setUserSpeaking] = useState(false);
+  const [isCalling, setIsCalling] = useState(false)
+  const [userSpeaking, setUserSpeaking] = useState(false)
 
   useEffect(() => {
     // If SDK already initialized
     if (props.retellClient) {
-      console.log("SDK already initialized");
-      return;
+      console.log('SDK already initialized')
+      return
     }
 
     // Connect to ngrok url for rpi websocket
-    const rpiWebsocket = new WebSocket(RPI_NGROK_URL);
-    setRpiWebsocket(rpiWebsocket);
+    const rpiWebsocket = new WebSocket(RPI_NGROK_URL)
+    setRpiWebsocket(rpiWebsocket)
 
-    console.log("Mounted");
+    console.log('Mounted')
 
     // Initialize the SDK
-    const newRetellClient = new RetellWebClient();
-    props.setRetellClient(newRetellClient);
+    const newRetellClient = new RetellWebClient()
+    props.setRetellClient(newRetellClient)
 
     // Setup event listeners
-    newRetellClient.on("conversationStarted", () => {
-      console.log("conversationStarted");
-    });
+    newRetellClient.on('conversationStarted', () => {
+      console.log('conversationStarted')
+    })
 
-    newRetellClient.on("audio", (_audio: Uint8Array) => {
-      console.log("There is audio");
-      setUserSpeaking(true);
-    });
+    newRetellClient.on('audio', (_audio: Uint8Array) => {
+      console.log('There is audio')
+      setUserSpeaking(true)
+    })
 
-    newRetellClient.on("conversationEnded", ({ code, reason }) => {
-      console.log("Closed with code:", code, ", reason:", reason);
-      setUserSpeaking(false);
-      setIsCalling(false); // Update button to "Start" when conversation ends
-    });
+    newRetellClient.on('conversationEnded', ({code, reason}) => {
+      console.log('Closed with code:', code, ', reason:', reason)
+      setUserSpeaking(false)
+      setIsCalling(false) // Update button to "Start" when conversation ends
+    })
 
-    newRetellClient.on("error", (error) => {
-      console.error("An error occurred:", error);
-      setIsCalling(false); // Update button to "Start" in case of error
-    });
+    newRetellClient.on('error', (error) => {
+      console.error('An error occurred:', error)
+      setIsCalling(false) // Update button to "Start" in case of error
+    })
 
-    newRetellClient.on("agentStartTalking", () => {
-      console.log("Agent started talking");
+    newRetellClient.on('agentStartTalking', () => {
+      console.log('Agent started talking')
       // Send "start" event to rpi websocket
       if (rpiWebsocket.readyState === WebSocket.OPEN) {
-        rpiWebsocket.send("start");
+        rpiWebsocket.send('start')
       }
-    });
+    })
 
-    newRetellClient.on("agentStopTalking", () => {
-      console.log("Agent stopped talking");
+    newRetellClient.on('agentStopTalking', () => {
+      console.log('Agent stopped talking')
       // Send "stop" event to rpi websocket
       if (rpiWebsocket.readyState === WebSocket.OPEN) {
-        rpiWebsocket.send("stop");
+        rpiWebsocket.send('stop')
       }
-    });
+    })
 
     newRetellClient.on(
-      "update",
-      (update: { transcript: MessageTranscript[] }) => {
+      'update',
+      (update: {transcript: MessageTranscript[]}) => {
         // Update messages
         // setMessages(update.transcript);
         // Print live transcript as needed
-        console.log("update", update);
-        props.onUpdate?.(update);
-      }
-    );
+        console.log('update', update)
+        props.onUpdate?.(update)
+      },
+    )
 
     // Start conversation on mount
     // toggleConversation();
@@ -109,47 +108,47 @@ export default function Voice(props: {
     return () => {
       // Cleanup event listeners when the component is unmounted
       if (newRetellClient) {
-        newRetellClient.stopConversation();
-        newRetellClient.off("conversationStarted");
-        newRetellClient.off("audio");
-        newRetellClient.off("conversationEnded");
-        newRetellClient.off("error");
-        newRetellClient.off("update");
+        newRetellClient.stopConversation()
+        newRetellClient.off('conversationStarted')
+        newRetellClient.off('audio')
+        newRetellClient.off('conversationEnded')
+        newRetellClient.off('error')
+        newRetellClient.off('update')
       }
-    };
-  }, []);
+    }
+  }, [])
 
   const connectFuncCallWebsocket = async (call_id: string) => {
     // Connect to the function call websocket
-    const newFuncCallSocket = new WebSocket(FUNC_CALL_ENDPOINT + "/" + call_id);
-    props.setFuncCallSocket(newFuncCallSocket);
+    const newFuncCallSocket = new WebSocket(FUNC_CALL_ENDPOINT + '/' + call_id)
+    props.setFuncCallSocket(newFuncCallSocket)
 
     newFuncCallSocket.onopen = () => {
-      console.log("Function call websocket connected");
-      props.onDataSocketConnect?.();
-    };
+      console.log('Function call websocket connected')
+      props.onDataSocketConnect?.()
+    }
 
     newFuncCallSocket.onmessage = (event) => {
       try {
-        const funcCallResult: FunctionCall = JSON.parse(event.data);
+        const funcCallResult: FunctionCall = JSON.parse(event.data)
 
-        console.log("Function call result:", funcCallResult);
-        props.onFuncCallResult?.(funcCallResult);
+        console.log('Function call result:', funcCallResult)
+        props.onFuncCallResult?.(funcCallResult)
       } catch (error) {
-        console.error("Error parsing function call result:", error);
+        console.error('Error parsing function call result:', error)
       }
-    };
+    }
 
     newFuncCallSocket.onclose = () => {
-      console.log("Function call websocket disconnected");
-    };
-  };
+      console.log('Function call websocket disconnected')
+    }
+  }
 
   const toggleConversation = async () => {
     if (isCalling) {
-      props.retellClient!.stopConversation();
+      props.retellClient!.stopConversation()
     } else {
-      const registerCallResponse = await registerCall(AGENT_ID);
+      const registerCallResponse = await registerCall(AGENT_ID)
       if (registerCallResponse.callId) {
         props
           .retellClient!.startConversation({
@@ -157,40 +156,40 @@ export default function Voice(props: {
             sampleRate: registerCallResponse.sampleRate,
             enableUpdate: true,
           })
-          .catch(console.error);
-        console.log("Started call");
-        setIsCalling(true); // Update button to "Stop" when conversation starts
+          .catch(console.error)
+        console.log('Started call')
+        setIsCalling(true) // Update button to "Stop" when conversation starts
       }
     }
-  };
+  }
 
   async function registerCall(agentId: string): Promise<RegisterCallResponse> {
     try {
       // Replace with your server url
       const response = await fetch(SERVER_ENDPOINT, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           agentId: agentId,
         }),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        throw new Error(`Error: ${response.status}`)
       }
 
-      const data: RegisterCallResponse = await response.json();
+      const data: RegisterCallResponse = await response.json()
       if (data.callId) {
-        connectFuncCallWebsocket(data.callId);
+        connectFuncCallWebsocket(data.callId)
       } else {
-        console.error("No call id provided for registered call.", data);
+        console.error('No call id provided for registered call.', data)
       }
-      return data;
+      return data
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
   }
 
@@ -218,5 +217,5 @@ export default function Voice(props: {
         </button>
       )}
     </div>
-  );
+  )
 }

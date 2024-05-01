@@ -173,37 +173,6 @@ class LlmClient:
                 ),
                 description="Move to the specified slide if the user explicitly asks for it.",
             ),
-            StructuredTool.from_function(
-                name="new_slide",
-                func=lambda title, description, slides: run_tool(
-                    {
-                        "name": "new_slide",
-                        "arguments": {
-                            "lecture": {
-                                "title": title,
-                                "description": description,
-                                "slides": [
-                                    {
-                                        "title": slides[0]["title"],
-                                        "template_id": slides[0]["template_id"],
-                                        "images": slides[0]["images"],
-                                        "texts": slides[0]["texts"],
-                                        "speaker_notes": slides[0]["speaker_notes"],
-                                        "image": {
-                                            "src": slides[0]["image"]["src"],
-                                            "description": slides[0]["image"][
-                                                "description"
-                                            ],
-                                        },
-                                    },
-                                    *slides[1:],
-                                ],
-                            },
-                        },
-                    }
-                ),
-                description="Create a new slide when user asks for new topic",
-            ),
         ]
 
         agent = create_openai_tools_agent(self.client, tools, self.prompt)
