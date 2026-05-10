@@ -1,6 +1,6 @@
 {
-  "name": "teachme-frontend",
-  "version": "0.1.0",
+  "name": "adapted",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,34 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^3.5.0",
-    "@types/reveal.js": "^5.0.3",
-    "i": "^0.3.7",
-    "lucide-react": "^0.372.0",
-    "next": "^14.2.2",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-resizable-panels": "^2.0.18",
-    "react-reveal": "^1.2.2",
-    "react-type-animation": "^3.2.0",
-    "reactive-button": "^1.3.15",
-    "retell": "^1.1.1",
-    "retell-client-js-sdk": "^1.3.2",
-    "sass": "^1.75.0",
-    "spectacle": "^10.1.8",
-    "utf-8-validate": "^6.0.3",
-    "ws": "^8.16.0",
-    "zustand": "^4.5.2"
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.469.0",
+    "motion": "^11.15.0",
+    "next": "^15.1.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.4.19",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.2",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.5"
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^15.1.3",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2"
   }
 }

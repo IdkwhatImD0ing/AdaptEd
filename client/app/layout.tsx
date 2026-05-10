@@ -1,14 +1,36 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { Fraunces, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  axes: ["opsz", "SOFT"],
+});
+
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "AdaptED",
+  title: "AdaptEd — Conversational learning",
   description:
-    "10x your learning through interactive and personalized lectures, powered by AI",
+    "Lectures that talk back. AdaptEd turns static teaching into a conversation with an AI lecturer that adapts in real time. Originally built at LA Hacks 2024.",
+  metadataBase: new URL("https://adapted.example.com"),
+  openGraph: {
+    title: "AdaptEd",
+    description:
+      "Conversational learning. Lectures that talk back. LA Hacks 2024 Google sponsor track winner.",
+  },
 };
 
 export default function RootLayout({
@@ -17,15 +39,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full" suppressHydrationWarning={true}>
-      <UserProvider>
-        <body
-          className={`${inter.className} h-full`}
-          suppressHydrationWarning={true}
-        >
-          {children}
-        </body>
-      </UserProvider>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${instrumentSans.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

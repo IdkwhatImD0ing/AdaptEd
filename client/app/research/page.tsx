@@ -1,187 +1,194 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { motion, AnimatePresence } from "motion/react";
+import NavBar from "../components/NavBar";
+import { mockLecture } from "../lib/mockLecture";
 
 type Task = {
-  title: string;
-  url?: string;
-  status: "todo" | "inprogress" | "done";
-  subtasks: string[];
+  id: string;
+  label: string;
+  source: string;
+  durationMs: number;
 };
 
-export default function page() {
-  useEffect(() => {
-    const generateLecture = async () => {
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const topic = decodeURIComponent(urlParams.get("topic") || "");
-        const response = await fetch("http://localhost:8000/generate-simple", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ topic: topic }),
-        });
+const TASKS: Task[] = [
+  {
+    id: "wiki",
+    label: "Reading Wikipedia",
+    source: "en.wikipedia.org",
+    durationMs: 1100,
+  },
+  {
+    id: "yt",
+    label: "Watching a YouTube lecture",
+    source: "youtube.com — Abdul Bari · 2hr 31m",
+    durationMs: 1400,
+  },
+  {
+    id: "img",
+    label: "Selecting visuals",
+    source: "Serper image search · GPT-4o descriptions",
+    durationMs: 1100,
+  },
+  {
+    id: "draft",
+    label: "Drafting the slide deck",
+    source: "Gemini 1.5 Pro · 8 slide aggregator prompt",
+    durationMs: 1500,
+  },
+];
 
-        if (response.ok) {
-          const lecture = await response.json();
-          console.log("Generated lecture:", lecture);
-          localStorage.setItem("lecture", JSON.stringify(lecture));
-          // Update the tasks state with the research tasks from the lecture
-          setTasks(lecture.research_tasks);
-          // Store the lecture data in the user's account database via pymongo
-          const response2 = await fetch(
-            "http://localhost:8000/api/store-lecture",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(lecture),
-            }
-          );
-          console.log(response2); // Process your response further
-          window.location.href = "/lecture";
-        } else {
-          console.error("Error generating lecture:", response.statusText);
+function ResearchInner() {
+  const router = useRouter();
+  const search = useSearchParams();
+  const topic = search.get("topic") ?? "Red-Black Trees";
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    let idx = 0;
+
+    function tick() {
+      if (cancelled) return;
+      if (idx >= TASKS.length) {
+        // Persist the canned lecture and route to viewer
+        try {
+          localStorage.setItem("lecture", JSON.stringify(mockLecture));
+          localStorage.setItem("topic", topic);
+        } catch {
+          // ignore — we still have a fallback in the lecture page
         }
-      } catch (error) {
-        console.error("Error generating lecture:", error);
+        router.push("/lecture");
+        return;
       }
-    };
+      setActiveIndex(idx);
+      const t = TASKS[idx];
+      idx += 1;
+      setTimeout(tick, t.durationMs);
+    }
 
-    generateLecture();
-  }, []);
-
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [currentTask, setCurrentTask] = useState<string | null>(
-    "Research Google"
-  );
-  const [currentSubtask, setCurrentSubtask] = useState<string | null>(null);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTasks((prevTasks) => {
-        const updatedTasks = [...prevTasks];
-        const currentTaskIndex = updatedTasks.findIndex(
-          (task) => task.title === currentTask
-        );
-
-        if (currentTaskIndex !== -1) {
-          const currentTaskObj = updatedTasks[currentTaskIndex];
-          const currentSubtaskIndex = currentTaskObj.subtasks.findIndex(
-            (subtask) => subtask === currentSubtask
-          );
-
-          if (currentSubtaskIndex !== -1) {
-            const nextSubtaskIndex =
-              (currentSubtaskIndex + 1) % currentTaskObj.subtasks.length;
-            setCurrentSubtask(currentTaskObj.subtasks[nextSubtaskIndex]);
-
-            if (nextSubtaskIndex === 0) {
-              const nextTaskIndex =
-                (currentTaskIndex + 1) % updatedTasks.length;
-              const nextTask = updatedTasks[nextTaskIndex];
-              setCurrentTask(nextTask.title);
-              setCurrentSubtask(nextTask.subtasks[0]);
-            }
-          } else {
-            setCurrentSubtask(currentTaskObj.subtasks[0]);
-          }
-        }
-
-        return updatedTasks;
-      });
-    }, Math.floor(Math.random() * 4000) + 2000);
-
+    const start = setTimeout(tick, 400);
     return () => {
-      clearInterval(interval);
+      cancelled = true;
+      clearTimeout(start);
     };
-  }, [currentTask, currentSubtask]);
+  }, [router, topic]);
+
   return (
-    <main className="min-h-screen">
-      <div className="flex p-20 gap-20">
-        <div className="w-[400px]">
-          <h1 className="text-3xl font-bold">Researching...</h1>
-          <h1 className="text-2xl mt-4">
-            Gathing information from a variety of sources to build comprehensive
-            interactive lecture.
-          </h1>
-        </div>
-        <div className="w-1/2 flex flex-col items-end">
-          <ul className="list-none list-inside max-w-[500px] flex flex-col gap-8">
-            {tasks?.map((task, index) => (
-              <li key={index}>
-                <div
-                  className={`flex p-4 border-2 rounded-xl cursor-pointer mb-4 pr-20 overflow-hidden ${
-                    currentTask === task.title
-                      ? "bg-purple-500"
-                      : tasks.indexOf(task) <
-                        tasks.findIndex((t) => t.title === currentTask)
-                      ? "bg-gray-800"
-                      : "border-gray-500"
-                  }`}
-                >
-                  <img
-                    alt="Favicon"
-                    src={
-                      "https://www.google.com/s2/favicons?domain=" + task.url
-                    }
-                    className="w-8 h-8 mr-4"
-                  />
-                  <div>
-                    <h1 className="text-2xl font-bold "> {task.title}</h1>
-                    <h2 className="text-xl opacity-75">{task.url}</h2>
-                  </div>
-                </div>
-                {task.subtasks.length > 0 && (
-                  <ul className="list-none list-inside ml-8 flex flex-col gap-2">
-                    {task.subtasks.map((subtask, subIndex) => (
-                      <li
-                        key={subIndex}
-                        className={`text-lg p-4 border-2 rounded-xl cursor-pointer ${
-                          currentSubtask === subtask
-                            ? "bg-purple-500"
-                            : task.subtasks.indexOf(subtask) <
-                                task.subtasks.findIndex(
-                                  (s) => s === currentSubtask
-                                ) ||
-                              tasks.indexOf(task) <
-                                tasks.findIndex((t) => t.title === currentTask)
-                            ? "bg-gray-800"
-                            : "border-gray-500"
+    <main className="min-h-screen mesh-soft grain text-paper relative">
+      <NavBar variant="minimal" />
+
+      <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-28 pb-16">
+        <div className="max-w-6xl mx-auto w-full grid grid-cols-12 gap-10 items-start">
+          <div className="col-span-12 md:col-span-5 sticky md:top-32">
+            <div className="chip mb-6">
+              <span className="text-violet-core">●</span> Researching
+            </div>
+            <h1
+              className="font-display leading-[0.92] text-balance"
+              style={{ fontSize: "clamp(2.5rem, 5vw, 4.25rem)", letterSpacing: "-0.04em" }}
+            >
+              Gathering everything we can find on{" "}
+              <span
+                className="font-display italic text-violet-gradient"
+                style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 100" }}
+              >
+                {topic}
+              </span>
+              .
+            </h1>
+            <p className="mt-6 font-sans text-paper-muted text-base md:text-lg leading-relaxed text-pretty max-w-md">
+              The lecturer is reading, watching, and looking — pulling from
+              several sources at once and stitching them into a single deck.
+              This usually takes about thirty seconds.
+            </p>
+
+            <div className="mt-10 font-mono text-[10px] tracking-widest uppercase text-paper-subtle">
+              Step 02 / 03
+            </div>
+          </div>
+
+          <div className="col-span-12 md:col-span-7">
+            <ol className="relative border-l border-rule pl-8 space-y-10">
+              {TASKS.map((t, i) => {
+                const status =
+                  i < activeIndex ? "done" : i === activeIndex ? "active" : "pending";
+                return (
+                  <li key={t.id} className="relative">
+                    {/* Marker */}
+                    <span
+                      className={`absolute -left-[2.6rem] top-1.5 w-4 h-4 rounded-full border ${
+                        status === "active"
+                          ? "border-violet-core bg-violet-core/20"
+                          : status === "done"
+                          ? "border-violet-deep bg-violet-deep/40"
+                          : "border-rule bg-ink-surface"
+                      }`}
+                    >
+                      {status === "active" && (
+                        <span className="absolute inset-0 rounded-full border border-violet-core animate-pulse-ring" />
+                      )}
+                    </span>
+
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="marker-num text-2xl">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <h3
+                        className={`font-display tracking-tighter text-2xl md:text-3xl transition-colors duration-300 ${
+                          status === "active"
+                            ? "text-paper"
+                            : status === "done"
+                            ? "text-paper-muted"
+                            : "text-paper-subtle"
                         }`}
                       >
-                        {subtask}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+                        {t.label}
+                      </h3>
+                    </div>
+                    <div className="font-mono text-[10px] tracking-widest uppercase text-paper-subtle">
+                      {t.source}
+                    </div>
 
-        <div className="w-1/2">
-          <img
-            src={
-              "https://image.thum.io/get/" +
-              tasks.find((task) => task.title === currentTask)?.url
-            }
-            alt="Research Image"
-            className="w-full h-auto rounded-xl"
-          />
-          <p className="text-center italic mt-4">
-            {tasks.find((task) => task.title === currentTask)?.title} -{" "}
-            {tasks.find((task) => task.title === currentTask)?.url}
-          </p>
-          {currentSubtask && (
-            <p className="text-center mt-4">
-              Current Subtask: {currentSubtask}
-            </p>
-          )}
+                    <AnimatePresence>
+                      {status === "active" && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.4 }}
+                          className="mt-4 overflow-hidden"
+                        >
+                          <div className="h-[2px] w-full bg-rule overflow-hidden">
+                            <motion.div
+                              initial={{ width: "0%" }}
+                              animate={{ width: "100%" }}
+                              transition={{
+                                duration: t.durationMs / 1000,
+                                ease: "easeInOut",
+                              }}
+                              className="h-full bg-gradient-to-r from-violet-soft to-violet-deep"
+                            />
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
         </div>
-      </div>
+      </section>
     </main>
+  );
+}
+
+export default function ResearchPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen bg-ink" />}>
+      <ResearchInner />
+    </Suspense>
   );
 }
