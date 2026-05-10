@@ -1,9 +1,12 @@
 "use client";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { Github } from "lucide-react";
 import clsx from "clsx";
 
 type Variant = "landing" | "minimal";
+
+const GITHUB_URL = "https://github.com/IdkwhatImD0ing/AdaptEd";
 
 export default function NavBar({ variant = "landing" }: { variant?: Variant }) {
   return (
@@ -50,16 +53,33 @@ export default function NavBar({ variant = "landing" }: { variant?: Variant }) {
         </nav>
       )}
 
-      <Link
-        href="/input"
-        className="btn-ghost group"
-        aria-label="Open the demo"
-      >
-        <span className="hidden sm:inline">Try it</span>
-        <span className="font-mono text-[10px] tracking-widest text-paper-subtle group-hover:text-violet-core transition-colors">
-          ↗
-        </span>
-      </Link>
+      <div className="flex items-center gap-2">
+        <a
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Source on GitHub"
+          title="Source on GitHub"
+          className={clsx(
+            "hidden sm:inline-flex items-center justify-center",
+            "h-9 w-9 rounded-full border border-rule",
+            "text-paper-subtle hover:text-paper hover:border-paper-muted",
+            "transition-colors"
+          )}
+        >
+          <Github className="w-4 h-4" />
+        </a>
+        <Link
+          href="/input"
+          className="btn-ghost group"
+          aria-label="Open the demo"
+        >
+          <span className="hidden sm:inline">Try it</span>
+          <span className="font-mono text-[10px] tracking-widest text-paper-subtle group-hover:text-violet-core transition-colors">
+            ↗
+          </span>
+        </Link>
+      </div>
     </motion.header>
   );
 }

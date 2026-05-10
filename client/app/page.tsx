@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, Sparkles, Mic, MessagesSquare, Eye } from "lucide-react";
+import { ArrowUpRight, Sparkles, Mic, MessagesSquare, Eye, Github } from "lucide-react";
 import NavBar from "./components/NavBar";
 import Typewriter from "./components/Typewriter";
 import YouTubeEmbed from "./components/YouTubeEmbed";
@@ -40,7 +40,7 @@ export default function Home() {
               <Sparkles className="w-3 h-3" /> Conversational learning
             </span>
             <span className="font-mono text-[10px] tracking-widest uppercase text-paper-subtle hidden md:inline">
-              ⌗ LA Hacks 2024 — Google sponsor track
+              ⌗ LA Hacks 2024 — Google Gemini · Fetch.ai
             </span>
           </div>
 
@@ -133,7 +133,7 @@ export default function Home() {
               <span className="text-paper">Stack</span> — Next.js · FastAPI · Gemini 1.5 Pro · Retell AI
             </div>
             <div>
-              <span className="text-paper">Sponsor</span> — Google First Place
+              <span className="text-paper">Awards</span> — Google Gemini 1st · Fetch.ai Agentified
             </div>
             <div>
               <span className="text-paper">Built in</span> — 36 hours, Pauley Pavilion
@@ -211,17 +211,21 @@ export default function Home() {
               <div className="mt-10 space-y-6 font-sans text-paper-muted text-lg leading-relaxed text-pretty max-w-2xl">
                 <p>
                   AdaptEd shipped at <span className="text-paper">LA Hacks 2024</span>{" "}
-                  — UCLA's annual hackathon, the largest collegiate event in
-                  Southern California. April 19–21, 705 hackers, sponsored by
-                  Google, Intel, Retell AI, Fetch.ai, MongoDB, and a dozen more.
+                  — UCLA's annual hackathon, the largest collegiate one in
+                  Southern California. April 19–21, 704 participants across
+                  142 teams, sponsored by Google, Intel, Fetch.ai, MongoDB,
+                  Auth0 and a dozen others.
                 </p>
                 <p>
-                  The original team won the{" "}
-                  <span className="text-paper">Google First Place</span> sponsor
-                  track. The thesis: of 16 million U.S. university students,
-                  half are falling behind on static lectures while fewer than
-                  three percent have access to a real tutor. So they built one
-                  that talks back.
+                  Out of those 142 teams, the original four — Bill Zhang,
+                  Spike O'Carroll, Jay Wu, and Jasmine Wu — took first in the{" "}
+                  <span className="text-paper">Google Gemini Challenge</span>{" "}
+                  and also won Fetch.ai's <span className="text-paper">
+                  Agentified Winners</span> prize. Their thesis: of 16 million
+                  U.S. university students, half fall behind on static,
+                  one-sided lectures while fewer than three percent have
+                  access to quality tutoring programs. So they built a
+                  lecturer that talks back.
                 </p>
                 <p>
                   This page is a <span className="text-paper">frontend
@@ -248,7 +252,7 @@ export default function Home() {
                   rel="noopener noreferrer"
                   className="btn-ghost"
                 >
-                  Original repo <ArrowUpRight className="w-3.5 h-3.5" />
+                  Source on GitHub <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
                 <a
                   href="https://la-hacks-2024.devpost.com/"
@@ -269,9 +273,11 @@ export default function Home() {
                 <SpecRow k="Event" v="LA Hacks 2024" />
                 <SpecRow k="Dates" v="Apr 19–21, 2024" />
                 <SpecRow k="Venue" v="Pauley Pavilion, UCLA" />
-                <SpecRow k="Hackers" v="705" />
-                <SpecRow k="Award" v="Google 1st Place" />
-                <SpecRow k="Team size" v="6" />
+                <SpecRow k="Hackers" v="704" />
+                <SpecRow k="Teams" v="142" />
+                <SpecRow k="Awards" v="Google · Fetch.ai" />
+                <SpecRow k="Team size" v="4" />
+                <SpecRow k="Build time" v="36 hrs" />
                 <SpecRow k="Sleep" v="≈ 4 hrs" />
               </div>
 
@@ -293,7 +299,36 @@ export default function Home() {
               <span className="font-display italic text-3xl tracking-tighter text-violet-gradient">Ed</span>
             </div>
             <div className="font-mono text-[10px] tracking-widest uppercase text-paper-subtle mt-2">
-              MIT licensed · Built by 6 hackers, archived by one
+              MIT licensed · Built by 4 hackers, archived by one
+            </div>
+            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[10px] tracking-widest uppercase text-paper-subtle">
+              <a
+                href="https://github.com/IdkwhatImD0ing/AdaptEd"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-paper transition-colors"
+              >
+                <Github className="w-3 h-3" />
+                <span>github</span>
+              </a>
+              <a
+                href="https://devpost.com/software/teachme-3p7bw1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-paper transition-colors"
+              >
+                Devpost
+                <ArrowUpRight className="w-3 h-3" />
+              </a>
+              <a
+                href="https://www.youtube.com/watch?v=8o1YJUFBcAw"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-paper transition-colors"
+              >
+                Demo reel
+                <ArrowUpRight className="w-3 h-3" />
+              </a>
             </div>
           </div>
           <Link href="/input" className="btn-primary">

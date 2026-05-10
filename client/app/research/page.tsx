@@ -22,13 +22,13 @@ const TASKS: Task[] = [
   {
     id: "yt",
     label: "Watching a YouTube lecture",
-    source: "youtube.com — Abdul Bari · 2hr 31m",
+    source: "youtube.com — Abdul Bari · algorithms course",
     durationMs: 1400,
   },
   {
     id: "img",
     label: "Selecting visuals",
-    source: "Serper image search · GPT-4o descriptions",
+    source: "Serper image search · GPT-4-turbo descriptions",
     durationMs: 1100,
   },
   {

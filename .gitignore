@@ -162,3 +162,8 @@ cython_debug/
 #.idea/
 
 *.jpg
+
+# Agent / IDE tooling — local-only, never commit
+.agents/
+.playwright-mcp/
+skills-lock.json

@@ -1,8 +1,7 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion } from "motion/react";
-import { ChevronLeft, ChevronRight, Home } from "lucide-react";
+import { ChevronLeft, ChevronRight, Home, PanelRightClose, PanelRightOpen } from "lucide-react";
 import Slideshow from "../components/Slideshow";
 import MockVoice from "../components/MockVoice";
 import Sidebar from "../components/Sidebar";
@@ -14,13 +13,32 @@ export default function LecturePage() {
   const [lecture, setLecture] = useState<Lecture | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [transcript, setTranscript] = useState<TranscriptEntry[]>([]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const stageRef = useRef<HTMLDivElement>(null);
 
-  // Hydrate from localStorage (written by /research) or fall back to canned
+  // Hydrate from localStorage (written by /research) or fall back to canned.
+  // We also reject any cached lecture whose slides don't have an `audio` URL
+  // — that means it was persisted before the ElevenLabs narration shipped,
+  // and using it would leave the voice dock silent.
   useEffect(() => {
     let parsed: Lecture | null = null;
     try {
       const raw = localStorage.getItem("lecture");
-      if (raw) parsed = JSON.parse(raw) as Lecture;
+      if (raw) {
+        const candidate = JSON.parse(raw) as Lecture;
+        const hasAudio = candidate.slides?.every((s) => typeof s.audio === "string");
+        if (hasAudio) {
+          parsed = candidate;
+        } else {
+          // Replace the stale cache with the up-to-date version so future
+          // visits don't keep falling through this branch.
+          try {
+            localStorage.setItem("lecture", JSON.stringify(mockLecture));
+          } catch {
+            // best-effort
+          }
+        }
+      }
     } catch {
       parsed = null;
     }
@@ -30,6 +48,7 @@ export default function LecturePage() {
   const total = lecture?.slides.length ?? 0;
   const slide = lecture?.slides[currentSlide];
   const speakerNotes = slide?.speaker_notes ?? slide?.title ?? "";
+  const audioSrc = slide?.audio;
 
   const next = useCallback(() => {
     setCurrentSlide((i) => Math.min(i + 1, total - 1));
@@ -45,7 +64,16 @@ export default function LecturePage() {
   // Keyboard nav
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight" || e.key === " ") next();
+      const target = e.target as HTMLElement | null;
+      const isFormField =
+        target?.tagName === "INPUT" ||
+        target?.tagName === "TEXTAREA" ||
+        target?.isContentEditable;
+      if (isFormField) return;
+      if (e.key === "ArrowRight" || e.key === " ") {
+        e.preventDefault();
+        next();
+      }
       if (e.key === "ArrowLeft") prev();
     };
     window.addEventListener("keydown", handler);
@@ -65,7 +93,7 @@ export default function LecturePage() {
   );
 
   const appendTranscript = useCallback((entries: TranscriptEntry[]) => {
-    setTranscript((prev) => [...prev, ...entries]);
+    setTranscript((p) => [...p, ...entries]);
   }, []);
 
   if (!lecture || !slide) {
@@ -78,121 +106,133 @@ export default function LecturePage() {
     );
   }
 
+  const progress = total > 0 ? (currentSlide + 1) / total : 0;
+
   return (
-    <main className="h-screen w-screen overflow-hidden bg-ink text-paper">
-      <div className="grid h-full" style={{ gridTemplateColumns: "1fr 360px" }}>
-        {/* Stage column */}
-        <div className="flex flex-col h-full min-h-0">
-          {/* Stage header */}
-          <header className="px-8 py-5 border-b border-rule flex items-center justify-between">
-            <div className="flex items-center gap-5 min-w-0">
-              <Link
-                href="/"
-                className="font-mono text-[10px] tracking-widest uppercase text-paper-subtle hover:text-paper transition-colors flex items-center gap-2"
-              >
-                <Home className="w-3.5 h-3.5" /> AdaptEd
-              </Link>
-              <span className="text-paper-subtle">/</span>
-              <div className="min-w-0">
-                <div className="font-mono text-[9px] tracking-widest uppercase text-paper-subtle">
-                  Now lecturing
-                </div>
-                <div className="font-display italic text-xl tracking-tighter text-paper truncate">
-                  {lecture.title}
-                </div>
+    <main
+      className="h-screen w-screen overflow-hidden bg-ink text-paper grid"
+      style={{
+        gridTemplateColumns: sidebarOpen ? "minmax(0, 1fr) 340px" : "minmax(0, 1fr)",
+        // Pin the grid row to exactly the viewport height. Without this the
+        // implicit `auto` row will grow if any descendant's intrinsic
+        // min-height exceeds the viewport, which silently pushes the voice
+        // dock below the fold.
+        gridTemplateRows: "100vh",
+      }}
+    >
+      {/* Stage column */}
+      <div className="relative flex flex-col h-full min-h-0 min-w-0">
+        {/* Header */}
+        <header className="shrink-0 px-6 py-3.5 border-b border-rule flex items-center justify-between gap-6">
+          <div className="flex items-center gap-4 min-w-0">
+            <Link
+              href="/"
+              className="font-mono text-[10px] tracking-widest uppercase text-paper-subtle hover:text-paper transition-colors flex items-center gap-2 shrink-0"
+            >
+              <Home className="w-3.5 h-3.5" /> AdaptEd
+            </Link>
+            <span className="text-paper-subtle/40">/</span>
+            <div className="min-w-0 hidden sm:block">
+              <div className="font-mono text-[9px] tracking-widest uppercase text-paper-subtle leading-none mb-1">
+                Now lecturing
               </div>
-            </div>
-
-            <div className="flex items-center gap-6">
-              <div className="font-mono text-[10px] tracking-widest uppercase text-paper-subtle hidden md:block">
-                {String(currentSlide + 1).padStart(2, "0")} of{" "}
-                {String(total).padStart(2, "0")}
+              <div className="font-display italic text-base tracking-tighter text-paper truncate leading-none">
+                {lecture.title}
               </div>
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  aria-label="Previous slide"
-                  onClick={prev}
-                  disabled={currentSlide === 0}
-                  className="w-9 h-9 rounded-full border border-rule flex items-center justify-center text-paper-muted hover:text-paper hover:border-violet-core/40 disabled:opacity-30 disabled:hover:border-rule transition-all"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next slide"
-                  onClick={next}
-                  disabled={currentSlide === total - 1}
-                  className="w-9 h-9 rounded-full border border-rule flex items-center justify-center text-paper-muted hover:text-paper hover:border-violet-core/40 disabled:opacity-30 disabled:hover:border-rule transition-all"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </header>
-
-          {/* Stage canvas */}
-          <div className="flex-1 min-h-0 p-8">
-            <div className="w-full h-full max-w-[1600px] mx-auto">
-              <Slideshow lecture={lecture} currentIndex={currentSlide} />
             </div>
           </div>
 
-          {/* Voice dock */}
-          <motion.section
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="border-t border-rule px-8 py-6 bg-ink-surface/60 backdrop-blur-sm"
-          >
-            <MockVoice
-              speakerNotes={speakerNotes}
-              slideIndex={currentSlide}
-              totalSlides={total}
-              onAutoAdvance={next}
-              onAction={onAction}
-              onTranscript={appendTranscript}
-            />
-          </motion.section>
-
-          {/* Slide rail */}
-          <div className="border-t border-rule px-8 py-4 overflow-x-auto">
-            <div className="flex items-center gap-2 min-w-max">
-              {lecture.slides.map((s, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => goto(i)}
-                  aria-label={`Go to slide ${i + 1}: ${s.title}`}
-                  className={`flex flex-col items-start gap-1 px-3 py-2 rounded-md border transition-all max-w-[200px] ${
-                    i === currentSlide
-                      ? "border-violet-core/60 bg-violet-core/10"
-                      : "border-transparent hover:border-rule"
-                  }`}
-                >
-                  <span
-                    className={`font-mono text-[9px] tracking-widest uppercase ${
-                      i === currentSlide ? "text-violet-core" : "text-paper-subtle"
-                    }`}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span
-                    className={`font-sans text-xs truncate w-full text-left ${
-                      i === currentSlide ? "text-paper" : "text-paper-muted"
-                    }`}
-                  >
-                    {s.title}
-                  </span>
-                </button>
-              ))}
+          <div className="flex items-center gap-4 shrink-0">
+            <span className="hidden md:inline-flex items-center gap-3 font-mono text-[10px] tracking-widest uppercase text-paper-subtle">
+              <span className="tabular-nums text-paper">
+                {String(currentSlide + 1).padStart(2, "0")}
+              </span>
+              <span className="opacity-50">/</span>
+              <span className="tabular-nums">{String(total).padStart(2, "0")}</span>
+            </span>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                aria-label="Previous slide"
+                onClick={prev}
+                disabled={currentSlide === 0}
+                className="w-8 h-8 rounded-full border border-rule flex items-center justify-center text-paper-muted hover:text-paper hover:border-violet-core/50 disabled:opacity-25 disabled:hover:text-paper-muted disabled:hover:border-rule transition-all"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                aria-label="Next slide"
+                onClick={next}
+                disabled={currentSlide === total - 1}
+                className="w-8 h-8 rounded-full border border-rule flex items-center justify-center text-paper-muted hover:text-paper hover:border-violet-core/50 disabled:opacity-25 disabled:hover:text-paper-muted disabled:hover:border-rule transition-all"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
             </div>
+            <button
+              type="button"
+              aria-label={sidebarOpen ? "Hide transcript" : "Show transcript"}
+              onClick={() => setSidebarOpen((o) => !o)}
+              className="w-8 h-8 rounded-full border border-rule flex items-center justify-center text-paper-muted hover:text-paper hover:border-violet-core/50 transition-all"
+              title={sidebarOpen ? "Hide transcript" : "Show transcript"}
+            >
+              {sidebarOpen ? (
+                <PanelRightClose className="w-3.5 h-3.5" />
+              ) : (
+                <PanelRightOpen className="w-3.5 h-3.5" />
+              )}
+            </button>
+          </div>
+        </header>
+
+        {/* Progress hairline */}
+        <div className="shrink-0 h-px bg-rule relative overflow-hidden">
+          <div
+            className="absolute left-0 top-0 h-full bg-gradient-to-r from-violet-soft to-violet-deep transition-[width] duration-500 ease-out"
+            style={{ width: `${progress * 100}%` }}
+          />
+        </div>
+
+        {/* Stage */}
+        <div
+          ref={stageRef}
+          className="flex-1 min-h-0 min-w-0 p-4 md:p-6 lg:p-8 grid place-items-center overflow-hidden"
+          style={{ containerType: "size" }}
+        >
+          <div
+            className="relative max-w-[1500px] overflow-hidden"
+            style={{
+              // Fit a 16:9 box inside the stage container, scaling to whichever
+              // dimension is binding. Uses container query units so it adapts
+              // when the sidebar toggles. `overflow: hidden` is critical here:
+              // CSS `aspect-ratio` is a hint that content can override, so
+              // without clipping a tall slide can push this box to grow and
+              // shove the voice dock below the viewport.
+              width: "min(100cqw, calc(100cqh * 16 / 9))",
+              aspectRatio: "16 / 9",
+            }}
+          >
+            <Slideshow lecture={lecture} currentIndex={currentSlide} />
           </div>
         </div>
 
-        {/* Transcript column */}
-        <Sidebar messages={transcript} />
+        {/* Voice dock */}
+        <section className="shrink-0 border-t border-rule px-6 py-3.5 bg-ink-surface/60 backdrop-blur-sm">
+          <MockVoice
+            speakerNotes={speakerNotes}
+            audioSrc={audioSrc}
+            slideIndex={currentSlide}
+            totalSlides={total}
+            onAutoAdvance={next}
+            onAction={onAction}
+            onTranscript={appendTranscript}
+          />
+        </section>
       </div>
+
+      {/* Transcript column */}
+      {sidebarOpen && <Sidebar messages={transcript} />}
     </main>
   );
 }

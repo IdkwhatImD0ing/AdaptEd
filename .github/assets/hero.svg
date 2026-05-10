@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 540" role="img" aria-label="AdaptEd - Lectures that talk back">
+  <title>AdaptEd - Lectures that talk back</title>
+  <defs>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c700e7"/>
+      <stop offset="55%" stop-color="#9f03fe"/>
+      <stop offset="100%" stop-color="#6303ff"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f5f4f0"/>
+      <stop offset="100%" stop-color="#d8d6cf"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="32%" cy="48%" r="55%">
+      <stop offset="0%" stop-color="#c700e7" stop-opacity="0.40"/>
+      <stop offset="55%" stop-color="#6303ff" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#0a0a0c" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="78%" cy="78%" r="40%">
+      <stop offset="0%" stop-color="#6303ff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#0a0a0c" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#1f1f22"/>
+    </pattern>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.10 0"/>
+    </filter>
+    <clipPath id="frame"><rect width="1440" height="540" rx="14"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#frame)">
+    <rect width="1440" height="540" fill="#0a0a0c"/>
+    <rect width="1440" height="540" fill="url(#dots)" opacity="0.45"/>
+    <rect width="1440" height="540" fill="url(#glow)"/>
+    <rect width="1440" height="540" fill="url(#glowB)"/>
+    <rect width="1440" height="540" filter="url(#grain)"/>
+
+    <text x="1240" y="430" text-anchor="end"
+          font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+          font-style="italic" font-weight="200"
+          font-size="520" letter-spacing="-26"
+          fill="url(#violet)" opacity="0.07">01</text>
+
+    <g transform="translate(80, 88)">
+      <circle cx="6" cy="-4" r="6" fill="#c700e7"/>
+      <text x="22" y="0"
+            font-family="ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace"
+            font-size="14" letter-spacing="3.4" fill="#9c9c98">ADAPTED &#183; LA HACKS 2024 &#183; GOOGLE GEMINI 1ST &#183; FETCH.AI AGENTIFIED</text>
+    </g>
+
+    <g transform="translate(80, 250)">
+      <text x="0" y="0"
+            font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+            font-style="italic" font-weight="700"
+            font-size="148" letter-spacing="-6"
+            fill="url(#paper)">Adapt</text>
+      <text x="450" y="0"
+            font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+            font-style="italic" font-weight="700"
+            font-size="148" letter-spacing="-6"
+            fill="url(#violet)">Ed</text>
+    </g>
+
+    <text x="80" y="350"
+          font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+          font-style="italic" font-weight="500"
+          font-size="44" letter-spacing="-1.5"
+          fill="#d8d6cf" opacity="0.92">Lectures that talk back.</text>
+
+    <line x1="80" y1="450" x2="1360" y2="450" stroke="#252528" stroke-width="1"/>
+    <g transform="translate(80, 488)"
+       font-family="ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace"
+       font-size="12" letter-spacing="2.6" fill="#9c9c98">
+      <text x="0" y="0">CONVERSATIONAL &#183; ADAPTIVE &#183; 36-HOUR BUILD &#183; 704 HACKERS &#183; 142 TEAMS</text>
+      <text x="1280" y="0" text-anchor="end" fill="#f5f4f0">V.2026 &#8212; FRONTEND SHOWCASE</text>
+    </g>
+
+    <g stroke="#252528" stroke-width="1" fill="none">
+      <path d="M 30 30 L 30 50 M 30 30 L 50 30"/>
+      <path d="M 1410 30 L 1410 50 M 1410 30 L 1390 30"/>
+      <path d="M 30 510 L 30 490 M 30 510 L 50 510"/>
+      <path d="M 1410 510 L 1410 490 M 1410 510 L 1390 510"/>
+    </g>
+
+    <rect x="0.5" y="0.5" width="1439" height="539" rx="14" fill="none" stroke="#1a1a1d" stroke-width="1"/>
+  </g>
+</svg>

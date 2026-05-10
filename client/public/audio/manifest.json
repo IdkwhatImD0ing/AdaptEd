@@ -1,0 +1,62 @@
+{
+  "generated_at": "2026-05-10T06:25:57.067Z",
+  "voice_id": "EXAVITQu4vr4xnSDxMaL",
+  "model_id": "eleven_multilingual_v2",
+  "output_format": "mp3_44100_128",
+  "voice_settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0.25,
+    "use_speaker_boost": true
+  },
+  "items": [
+    {
+      "id": "slide-0",
+      "file": "/audio/slide-0.mp3"
+    },
+    {
+      "id": "slide-1",
+      "file": "/audio/slide-1.mp3"
+    },
+    {
+      "id": "slide-2",
+      "file": "/audio/slide-2.mp3"
+    },
+    {
+      "id": "slide-3",
+      "file": "/audio/slide-3.mp3"
+    },
+    {
+      "id": "slide-4",
+      "file": "/audio/slide-4.mp3"
+    },
+    {
+      "id": "slide-5",
+      "file": "/audio/slide-5.mp3"
+    },
+    {
+      "id": "slide-6",
+      "file": "/audio/slide-6.mp3"
+    },
+    {
+      "id": "slide-7",
+      "file": "/audio/slide-7.mp3"
+    },
+    {
+      "id": "prompt-again",
+      "file": "/audio/prompt-again.mp3"
+    },
+    {
+      "id": "prompt-example",
+      "file": "/audio/prompt-example.mp3"
+    },
+    {
+      "id": "prompt-skip",
+      "file": "/audio/prompt-skip.mp3"
+    },
+    {
+      "id": "prompt-pause",
+      "file": "/audio/prompt-pause.mp3"
+    }
+  ]
+}

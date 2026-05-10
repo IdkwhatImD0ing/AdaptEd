@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 420" role="img" aria-label="The three loops behind AdaptEd">
+  <title>The three loops behind AdaptEd</title>
+  <defs>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c700e7"/>
+      <stop offset="100%" stop-color="#6303ff"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#16161a"/>
+      <stop offset="100%" stop-color="#0c0c10"/>
+    </linearGradient>
+    <pattern id="dots" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#1f1f22"/>
+    </pattern>
+    <clipPath id="frame"><rect width="1440" height="420" rx="14"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#frame)">
+    <rect width="1440" height="420" fill="#0a0a0c"/>
+    <rect width="1440" height="420" fill="url(#dots)" opacity="0.4"/>
+
+    <text x="80" y="60"
+          font-family="ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace"
+          font-size="13" letter-spacing="3.4" fill="#c5c5c0">THREE LOOPS &#183; RUNNING IN PARALLEL</text>
+
+    <g transform="translate(80, 100)">
+      <rect width="380" height="280" rx="10" fill="url(#card)" stroke="#2a2a2f" stroke-width="1"/>
+      <text x="32" y="62"
+            font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+            font-style="italic" font-weight="700" font-size="64"
+            fill="url(#violet)" letter-spacing="-3">01</text>
+      <text x="32" y="112"
+            font-family="ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace"
+            font-size="11" letter-spacing="2.6" fill="#c700e7">VOICE LOOP</text>
+      <text x="32" y="156"
+            font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+            font-weight="700" font-size="28" fill="#f5f4f0" letter-spacing="-0.8">Listen. Reply.</text>
+      <text x="32" y="190"
+            font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+            font-weight="700" font-size="28" fill="#f5f4f0" letter-spacing="-0.8">Get interrupted.</text>
+      <text x="32" y="232" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#9c9c98">
+        <tspan x="32" dy="0">Retell AI &#8594; LangChain agent</tspan>
+        <tspan x="32" dy="18">(GPT-3.5) with end-of-turn detection.</tspan>
+        <tspan x="32" dy="18">Three slide-control tools.</tspan>
+      </text>
+    </g>
+
+    <g transform="translate(530, 100)">
+      <rect width="380" height="280" rx="10" fill="url(#card)" stroke="#2a2a2f" stroke-width="1"/>
+      <text x="32" y="62"
+            font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+            font-style="italic" font-weight="700" font-size="64"
+            fill="url(#violet)" letter-spacing="-3">02</text>
+      <text x="32" y="112"
+            font-family="ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace"
+            font-size="11" letter-spacing="2.6" fill="#c700e7">CONTENT LOOP</text>
+      <text x="32" y="156"
+            font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+            font-weight="700" font-size="28" fill="#f5f4f0" letter-spacing="-0.8">Slides regenerate</text>
+      <text x="32" y="190"
+            font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+            font-weight="700" font-size="28" fill="#f5f4f0" letter-spacing="-0.8">from verbal cues.</text>
+      <text x="32" y="232" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#9c9c98">
+        <tspan x="32" dy="0">Wikipedia &#183; YouTube transcripts</tspan>
+        <tspan x="32" dy="18">(Gemini multimodal) &#183; Serper images</tspan>
+        <tspan x="32" dy="18">&#8594; Gemini 1.5 Pro slide aggregator.</tspan>
+      </text>
+    </g>
+
+    <g transform="translate(980, 100)">
+      <rect width="380" height="280" rx="10" fill="url(#card)" stroke="#2a2a2f" stroke-width="1"/>
+      <text x="32" y="62"
+            font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+            font-style="italic" font-weight="700" font-size="64"
+            fill="url(#violet)" letter-spacing="-3">03</text>
+      <text x="32" y="112"
+            font-family="ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace"
+            font-size="11" letter-spacing="2.6" fill="#c700e7">ATTENTION LOOP</text>
+      <text x="32" y="156"
+            font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+            font-weight="700" font-size="28" fill="#f5f4f0" letter-spacing="-0.8">Pace bends to</text>
+      <text x="32" y="190"
+            font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+            font-weight="700" font-size="28" fill="#f5f4f0" letter-spacing="-0.8">the student.</text>
+      <text x="32" y="232" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#9c9c98">
+        <tspan x="32" dy="0">Webcam emotion side-channel</tspan>
+        <tspan x="32" dy="18">(Hume on Intel Dev Cloud) signals</tspan>
+        <tspan x="32" dy="18">confusion &#8594; lecturer slows down.</tspan>
+      </text>
+    </g>
+  </g>
+</svg>
